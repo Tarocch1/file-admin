@@ -21,6 +21,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		getHandler(w, r, targetPath)
 		break
 	case http.MethodPost:
+		postHandler(w, r, targetPath)
 		break
 	case http.MethodPut:
 		break
@@ -28,7 +29,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		deleteHandler(w, r, targetPath)
 		break
 	default:
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }
 
@@ -93,6 +94,24 @@ func getHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
 	w.Header().Set("Content-Type", mimeType)
 	w.WriteHeader(http.StatusOK)
 	w.Write(fileBytes)
+}
+
+func postHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
+	if !pathNotExist(targetPath) {
+		w.WriteHeader(http.StatusConflict)
+		return
+	}
+	fileBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		errorHandler(w, err)
+		return
+	}
+	err = ioutil.WriteFile(targetPath, fileBytes, 0666)
+	if err != nil {
+		errorHandler(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
