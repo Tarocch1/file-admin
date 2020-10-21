@@ -31,10 +31,7 @@ var listTemplate = `
 		<tbody>
 			<tr>
 				<td><svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M853.333333 245.333333H245.333333l93.866667-93.866666c12.8-12.8 12.8-34.133333 0-46.933334-12.8-12.8-34.133333-12.8-46.933333 0l-145.066667 145.066667c-12.8 12.8-12.8 34.133333 0 46.933333l145.066667 145.066667c6.4 6.4 14.933333 10.666667 23.466666 10.666667s17.066667-4.266667 23.466667-10.666667c12.8-12.8 12.8-34.133333 0-46.933333L256 311.466667h597.333333c6.4 0 10.666667 4.266667 10.666667 10.666666v426.666667c0 6.4-4.266667 10.666667-10.666667 10.666667H170.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32h682.666666c40.533333 0 74.666667-34.133333 74.666667-74.666667V320c0-40.533333-34.133333-74.666667-74.666667-74.666667z"></path></svg></td>
-				<td><a href="..">..</a></td>
-				<td />
-				<td />
-				<td />
+				<td colspan="4"><a href="..">..</a></td>
 			</tr>
 			{{ range .Files }}
 			<tr>
@@ -46,22 +43,30 @@ var listTemplate = `
 				<td><a href="{{ .Name }}">{{ .Name }}</a></td>
 				<td data-mod-time="{{ .Time }}" />
 				<td style="text-align: end;">{{ formatSize .Size }}</td>
-				<td><a href="javascript:void(0);" onclick="deleteFile({{ .Name }});">删除</a></td>
+				<td><button onclick="deleteFile({{ .Name }});">删除</button></td>
 			</tr>
 			{{ end }}
 		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="5">
+					<button onclick="openFileSelector()">上传</button>
+				</th>
+			</tr>
+		</tfoot>
 	</table>
+	<input type="file" id="input_file" style="display:none" onchange="uploadFiles(this.files)" multiple>
 	<script>
+	const timeFormatter = Intl.DateTimeFormat(undefined, {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hourCycle: 'h23',
+	});
 	window.onload = function () {
-		const timeFormatter = Intl.DateTimeFormat(undefined, {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit',
-			hourCycle: 'h23',
-		});
 		document
 			.querySelectorAll('td[data-mod-time]')
 			.forEach(
@@ -71,8 +76,47 @@ var listTemplate = `
 					)),
 			);
 	};
+	window.ondragenter = function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+	};
+	window.ondragover = function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+	};
+	window.ondragleave = function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+	};
+	window.ondrop = function (e) {
+		e.stopPropagation();
+		e.preventDefault();
+		uploadFiles(e.dataTransfer.files);
+	};
+	function openFileSelector() {
+		document.querySelector('#input_file').click();
+	}
+	function uploadFiles(files) {
+		Promise.allSettled(
+			[...files].map(file =>
+				fetch(file.name, {
+					method: 'PUT',
+					body: file,
+				}),
+			),
+		).then(results => {
+			const all = results.length;
+			const succeed = results.filter(
+				result =>
+					result.status === 'fulfilled' &&
+					(result.value.status === 200 || result.value.status === 201),
+			).length;
+			alert(succeed + ' / ' + all + ' 个文件上传完成。');
+			window.location.reload();
+		});
+	}
 	function deleteFile(path) {
-		const r = confirm('是否要删除 ' + path + ' ?');
+		const r = confirm('是否要删除 ' + path + ' ？');
 		if (r) {
 			fetch(path, {
 				method: 'DELETE',
@@ -80,7 +124,7 @@ var listTemplate = `
 				if (res.status === 200) {
 					window.location.reload();
 				} else {
-					alert('删除失败!');
+					alert('删除失败！');
 				}
 			});
 		}

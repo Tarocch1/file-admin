@@ -24,6 +24,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		postHandler(w, r, targetPath)
 		break
 	case http.MethodPut:
+		putHandler(w, r, targetPath)
 		break
 	case http.MethodDelete:
 		deleteHandler(w, r, targetPath)
@@ -112,6 +113,25 @@ func postHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
+}
+
+func putHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
+	flag := pathNotExist(targetPath)
+	fileBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		errorHandler(w, err)
+		return
+	}
+	err = ioutil.WriteFile(targetPath, fileBytes, 0666)
+	if err != nil {
+		errorHandler(w, err)
+		return
+	}
+	if flag {
+		w.WriteHeader(http.StatusCreated)
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
