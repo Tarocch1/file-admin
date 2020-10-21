@@ -25,13 +25,14 @@ var listTemplate = `
 	<table>
 		<thead>
 			<tr>
-				<th colspan="4">{{ .Title }}</th>
+				<th colspan="5">{{ .Title }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td><svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M853.333333 245.333333H245.333333l93.866667-93.866666c12.8-12.8 12.8-34.133333 0-46.933334-12.8-12.8-34.133333-12.8-46.933333 0l-145.066667 145.066667c-12.8 12.8-12.8 34.133333 0 46.933333l145.066667 145.066667c6.4 6.4 14.933333 10.666667 23.466666 10.666667s17.066667-4.266667 23.466667-10.666667c12.8-12.8 12.8-34.133333 0-46.933333L256 311.466667h597.333333c6.4 0 10.666667 4.266667 10.666667 10.666666v426.666667c0 6.4-4.266667 10.666667-10.666667 10.666667H170.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32h682.666666c40.533333 0 74.666667-34.133333 74.666667-74.666667V320c0-40.533333-34.133333-74.666667-74.666667-74.666667z"></path></svg></td>
 				<td><a href="..">..</a></td>
+				<td />
 				<td />
 				<td />
 			</tr>
@@ -45,6 +46,7 @@ var listTemplate = `
 				<td><a href="{{ .Name }}">{{ .Name }}</a></td>
 				<td data-mod-time="{{ .Time }}" />
 				<td style="text-align: end;">{{ formatSize .Size }}</td>
+				<td><a href="javascript:void(0);" onclick="deleteFile({{ .Name }});">删除</a></td>
 			</tr>
 			{{ end }}
 		</tbody>
@@ -69,6 +71,20 @@ var listTemplate = `
 					)),
 			);
 	};
+	function deleteFile(path) {
+		const r = confirm('是否要删除 ' + path + ' ?');
+		if (r) {
+			fetch(path, {
+				method: 'DELETE',
+			}).then(res => {
+				if (res.status === 200) {
+					window.location.reload();
+				} else {
+					alert('删除失败!');
+				}
+			});
+		}
+	}
 	</script>
 </body>
 </html>
