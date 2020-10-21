@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 func getWorkDir() (string, error) {
@@ -41,4 +42,25 @@ func pathIsDir(path string) (bool, error) {
 		return false, err
 	}
 	return fileInfo.IsDir(), nil
+}
+
+func formatSize(intSize int64) string {
+	size := float64(intSize)
+	if size < 1024 {
+		return strconv.FormatFloat(size, 'f', 2, 64) + " B"
+	}
+	if size /= 1024; size < 1024 {
+		return strconv.FormatFloat(size, 'f', 2, 64) + " KB"
+	}
+	if size /= 1024; size < 1024 {
+		return strconv.FormatFloat(size, 'f', 2, 64) + " MB"
+	}
+	if size /= 1024; size < 1024 {
+		return strconv.FormatFloat(size, 'f', 2, 64) + " GB"
+	}
+	if size /= 1024; size < 1024 {
+		return strconv.FormatFloat(size, 'f', 2, 64) + " TB"
+	}
+	size /= 1024
+	return strconv.FormatFloat(size, 'f', 2, 64) + " PB"
 }

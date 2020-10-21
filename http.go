@@ -43,18 +43,35 @@ func getHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
 		return
 	}
 	if isDir {
-		files, err := ioutil.ReadDir(targetPath)
+		allFiles, err := ioutil.ReadDir(targetPath)
 		if err != nil {
 			errorHandler(w, err)
 			return
 		}
 		var data listTemplateDataStruct
 		data.Title = targetPath
-		data.Files = []string{}
-		for _, fileInfo := range files {
-			data.Files = append(data.Files, fileInfo.Name())
+		data.Files = []listTemplateDataFileStruct{}
+		var dirs, files []listTemplateDataFileStruct
+		for _, fileInfo := range allFiles {
+			if fileInfo.IsDir() {
+				dirs = append(dirs, listTemplateDataFileStruct{
+					Name:  fileInfo.Name(),
+					IsDir: fileInfo.IsDir(),
+					Time:  fileInfo.ModTime().Unix(),
+					Size:  fileInfo.Size(),
+				})
+			} else {
+				files = append(files, listTemplateDataFileStruct{
+					Name:  fileInfo.Name(),
+					IsDir: fileInfo.IsDir(),
+					Time:  fileInfo.ModTime().Unix(),
+					Size:  fileInfo.Size(),
+				})
+			}
 		}
-		t, err := template.New("listTemplate").Parse(listTemplate)
+		data.Files = append(data.Files, dirs...)
+		data.Files = append(data.Files, files...)
+		t, err := template.New("listTemplate").Funcs(template.FuncMap{"formatSize": formatSize}).Parse(listTemplate)
 		if err != nil {
 			errorHandler(w, err)
 			return
