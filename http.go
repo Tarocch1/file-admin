@@ -102,6 +102,15 @@ func postHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
+	if len(r.Header["X-Is-Dir"]) > 0 {
+		err := os.MkdirAll(targetPath, 0666)
+		if err != nil {
+			errorHandler(w, err)
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
+		return
+	}
 	fileBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		errorHandler(w, err)
