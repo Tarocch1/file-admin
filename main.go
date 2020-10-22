@@ -29,5 +29,10 @@ func main() {
 	mux.Handle("/", http.HandlerFunc(basicAuth(mainHandler)))
 
 	log.Print("Start serve ", workDir, " at ", host, ".")
-	log.Fatal(http.ListenAndServe(host, mux))
+
+	if flagHTTPSCert != "" && flagHTTPSKey != "" {
+		log.Fatal(http.ListenAndServeTLS(host, flagHTTPSCert, flagHTTPSKey, mux))
+	} else {
+		log.Fatal(http.ListenAndServe(host, mux))
+	}
 }
