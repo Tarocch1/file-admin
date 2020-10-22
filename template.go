@@ -98,6 +98,7 @@ var listTemplate = `
 		document.querySelector('#input_file').click();
 	}
 	function uploadFiles(files) {
+		if (files.length === 0) return;
 		Promise.allSettled(
 			[...files].map(file =>
 				fetch(file.name, {

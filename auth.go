@@ -27,7 +27,7 @@ func basicAuth(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWri
 				return
 			}
 		}
-		w.Header().Set("WWW-Authenticate", `Basic`)
+		w.Header().Set("WWW-Authenticate", "Basic")
 		w.WriteHeader(http.StatusUnauthorized)
 	}
 }
