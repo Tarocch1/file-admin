@@ -15,6 +15,8 @@ func init() {
 func main() {
 	flag.Parse()
 
+	initAuth()
+
 	var err error
 	workDir, err = getWorkDir()
 	if err != nil {
@@ -24,7 +26,7 @@ func main() {
 	host := flagHost + ":" + flagPort
 
 	mux := http.NewServeMux()
-	mux.Handle("/", http.HandlerFunc(mainHandler))
+	mux.Handle("/", http.HandlerFunc(basicAuth(mainHandler)))
 
 	log.Print("Start serve ", workDir, " at ", host, ".")
 	log.Fatal(http.ListenAndServe(host, mux))
