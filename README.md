@@ -30,4 +30,5 @@ Usage of file-server:
         Path to https key.
   -p string
         Port to listen. (default "8080")
+  -v    Print version information.
 ```
