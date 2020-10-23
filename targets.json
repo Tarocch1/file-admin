@@ -28,7 +28,7 @@
     "arm": "7"
   },
   {
-    "out": "file-server_linux_arm32_v8a",
+    "out": "file-server_linux_arm64_v8a",
     "os": "linux",
     "arch": "arm64"
   },
