@@ -2,11 +2,18 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 )
 
 var workDir string
+var (
+	version   = ""
+	goVersion = ""
+	buildTime = ""
+	commitID  = ""
+)
 
 func init() {
 	initFlag()
@@ -14,6 +21,14 @@ func init() {
 
 func main() {
 	flag.Parse()
+
+	if flagVersion {
+		fmt.Println("Version:", version)
+		fmt.Println("Go Version:", goVersion)
+		fmt.Println("Build Time:", buildTime)
+		fmt.Println("Git Commit ID:", commitID)
+		return
+	}
 
 	initAuth()
 
@@ -28,7 +43,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.HandlerFunc(basicAuth(mainHandler)))
 
-	log.Print("Start serve ", workDir, " at ", host, ".")
+	log.Print("Starting serve ", workDir, " at ", host, ".")
 
 	if flagHTTPSCert != "" && flagHTTPSKey != "" {
 		log.Fatal(http.ListenAndServeTLS(host, flagHTTPSCert, flagHTTPSKey, mux))

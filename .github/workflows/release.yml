@@ -1,0 +1,53 @@
+name: Release Workflow
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v2
+      - id: setup_go
+        name: Setup go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.15'
+      - id: setup_nodejs
+        name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - id: npm_ci
+        name: npm ci
+        run: npm ci
+      - id: tag_name
+        name: Get tag name
+        uses: ./.github/actions/tag-name
+        with:
+          ref: ${{ github.ref }}
+      - id: build
+        name: Build
+        uses: ./.github/actions/build
+        env:
+          VERSION: ${{ steps.tag_name.outputs.tag }}
+          COMMIT_ID: ${{ github.sha }}
+      - id: create_release
+        name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+      - id: upload_release_asset
+        name: Upload Release Asset
+        uses: ./.github/actions/upload-release-asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}

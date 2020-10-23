@@ -1,0 +1,15 @@
+name: tag-name
+description: Get tag name
+
+inputs:
+  ref:
+    description: 'ref'
+    required: true
+
+outputs:
+  tag:
+    description: 'Tag name'
+
+runs:
+  using: 'node12'
+  main: 'index.js'

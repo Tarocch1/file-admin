@@ -1,0 +1,11 @@
+name: upload-release-asset
+description: Upload Release Asset
+
+inputs:
+  upload_url:
+    description: 'The URL for uploading assets to the release'
+    required: true
+
+runs:
+  using: 'node12'
+  main: 'index.js'
