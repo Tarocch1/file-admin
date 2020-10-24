@@ -43,7 +43,10 @@ var listTemplate = `
 				<td><a href="{{ .Name }}{{ if .IsDir }}/{{ end }}">{{ .Name }}</a></td>
 				<td data-mod-time="{{ .Time }}" />
 				<td style="text-align: end;">{{ formatSize .Size }}</td>
-				<td><button onclick="deleteFile({{ .Name }});">删除</button></td>
+				<td>
+					<button onclick="renameFile({{ .Name }});">重命名</button>
+					<button onclick="deleteFile({{ .Name }});">删除</button>
+				</td>
 			</tr>
 			{{ end }}
 		</tbody>
@@ -123,13 +126,31 @@ var listTemplate = `
 			fetch(folderName, {
 				method: 'POST',
 				headers: {
-					'X-Is-Dir': 'true',
+					'X-File-Server-Mkdir': 'true',
 				},
 			}).then(res => {
 				if (res.status === 201) {
 					window.location.reload();
 				} else {
 					alert('新建文件夹失败！');
+				}
+			});
+		}
+	}
+	function renameFile(path) {
+		const newName = prompt('请输入新名称：');
+		if (newName) {
+			fetch(path, {
+				method: 'PUT',
+				headers: {
+					'X-File-Server-Rename': 'true',
+				},
+				body: newName,
+			}).then(res => {
+				if (res.status === 200) {
+					window.location.reload();
+				} else {
+					alert('重命名失败！');
 				}
 			});
 		}
