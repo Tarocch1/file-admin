@@ -3,10 +3,8 @@ package main
 import (
 	"html/template"
 	"io/ioutil"
-	"mime"
 	"net/http"
 	"os"
-	"path/filepath"
 )
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
@@ -17,6 +15,9 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	switch r.Method {
+	case http.MethodHead:
+		headHandler(w, r, targetPath)
+		break
 	case http.MethodGet:
 		getHandler(w, r, targetPath)
 		break
@@ -32,6 +33,14 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+}
+
+func headHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
+	if pathNotExist(targetPath) {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	http.ServeFile(w, r, targetPath)
 }
 
 func getHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
@@ -83,18 +92,7 @@ func getHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
 		t.Execute(w, data)
 		return
 	}
-	mimeType := mime.TypeByExtension(filepath.Ext(targetPath))
-	if mimeType == "" {
-		mimeType = "application/octet-stream"
-	}
-	fileBytes, err := ioutil.ReadFile(targetPath)
-	if err != nil {
-		errorHandler(w, err)
-		return
-	}
-	w.Header().Set("Content-Type", mimeType)
-	w.WriteHeader(http.StatusOK)
-	w.Write(fileBytes)
+	http.ServeFile(w, r, targetPath)
 }
 
 func postHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
