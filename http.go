@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
