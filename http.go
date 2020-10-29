@@ -100,7 +100,7 @@ func postHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
-	if len(r.Header["X-Is-Dir"]) > 0 {
+	if len(r.Header["X-File-Server-Mkdir"]) > 0 {
 		err := os.MkdirAll(targetPath, 0666)
 		if err != nil {
 			errorHandler(w, err)
@@ -123,10 +123,23 @@ func postHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
 }
 
 func putHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
-	flag := pathNotExist(targetPath)
+	notExist := pathNotExist(targetPath)
 	fileBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		errorHandler(w, err)
+		return
+	}
+	if len(r.Header["X-File-Server-Rename"]) > 0 {
+		if notExist {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		err = os.Rename(targetPath, filepath.Join(filepath.Dir(targetPath), filepath.Base(string(fileBytes))))
+		if err != nil {
+			errorHandler(w, err)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
 		return
 	}
 	err = ioutil.WriteFile(targetPath, fileBytes, 0666)
@@ -134,7 +147,7 @@ func putHandler(w http.ResponseWriter, r *http.Request, targetPath string) {
 		errorHandler(w, err)
 		return
 	}
-	if flag {
+	if notExist {
 		w.WriteHeader(http.StatusCreated)
 	} else {
 		w.WriteHeader(http.StatusOK)
