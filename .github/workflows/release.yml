@@ -11,7 +11,7 @@ jobs:
     steps:
       - id: checkout
         name: Checkout
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
       - id: setup_go
         name: Setup go
         uses: actions/setup-go@v2
