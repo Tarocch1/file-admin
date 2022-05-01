@@ -18,6 +18,7 @@ func StartServer() {
 
 	mux.HandleFunc("/", middleware.Middleware(http.FileServer(http.FS(fsRoot)).ServeHTTP))
 
+	mux.HandleFunc("/api/download", middleware.Middleware(api.DownloadHandler))
 	mux.HandleFunc("/api/ls", middleware.Middleware(api.LsHandler))
 	mux.HandleFunc("/api/mkdir", middleware.Middleware(api.MkdirHandler))
 	mux.HandleFunc("/api/mv", middleware.Middleware(api.MvHandler))

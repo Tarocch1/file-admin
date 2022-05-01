@@ -11,7 +11,6 @@ import (
 func MvHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	// 获取 path 参数
 	path := r.FormValue("path")
 	from := r.FormValue("from")
 	target := r.FormValue("target")

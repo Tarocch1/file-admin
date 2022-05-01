@@ -52,7 +52,7 @@ export default function App() {
       if (item.isDir) {
         setPaths([...paths, item.name])
       } else {
-        // TODO download
+        window.open(`/api/download?target=${[...paths, item.name].join('/')}`)
       }
     },
     [paths]

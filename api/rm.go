@@ -11,11 +11,9 @@ import (
 func RmHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	// 获取 path 参数
 	path := r.FormValue("path")
 	target := r.FormValue("target")
 
-	// 计算出工作路径
 	workingPath, err := common.GetWorkingPath(path)
 	if err != nil {
 		ErrorHandler(w, http.StatusInternalServerError, err)
