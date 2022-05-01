@@ -1,9 +1,9 @@
 const core = require('@actions/core')
-const { GitHub } = require('@actions/github')
+const github = require('@actions/github')
 const fs = require('fs')
 const targets = require('../targets.json')
 
-const github = new GitHub(process.env.GITHUB_TOKEN)
+const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
 
 ;(async function () {
   try {
@@ -19,7 +19,7 @@ const github = new GitHub(process.env.GITHUB_TOKEN)
         'content-type': assetContentType,
         'content-length': contentLength(assetPath),
       }
-      await github.repos.uploadReleaseAsset({
+      await octokit.rest.repos.uploadReleaseAsset({
         url: uploadUrl,
         headers,
         name: assetName,
