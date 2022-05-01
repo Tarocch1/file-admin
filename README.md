@@ -1,10 +1,10 @@
-# File Server
+# File Admin
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/tarocch1/file-server)](https://github.com/Tarocch1/file-server/releases)
-[![GitHub All Releases](https://img.shields.io/github/downloads/tarocch1/file-server/total)](https://github.com/Tarocch1/file-server/releases)
-[![GitHub](https://img.shields.io/github/license/tarocch1/file-server)](https://github.com/Tarocch1/file-server/blob/master/LICENSE)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/tarocch1/file-admin)](https://github.com/Tarocch1/file-admin/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/tarocch1/file-admin/total)](https://github.com/Tarocch1/file-admin/releases)
+[![GitHub](https://img.shields.io/github/license/tarocch1/file-admin)](https://github.com/Tarocch1/file-admin/blob/master/LICENSE)
 
-一个简易的文件服务器。
+一个简易的文件管理工具。
 
 ## Feature
 
@@ -16,19 +16,19 @@
 ## Usage
 
 ```bash
-$ file-server --help
-Usage of file-server:
+$ file-admin --help
+Usage of ./file-admin:
   -a string
-        <username:password> Basic auth user.
+    	<username:password> Basic auth user.
   -d string
-        Dir path to serve. (default ".")
+    	Dir path to serve. (default ".")
   -h string
-        Host to listen. (default "0.0.0.0")
+    	Host to listen. (default "0.0.0.0")
   -https-cert string
-        Path to https cert.
+    	Path to https cert.
   -https-key string
-        Path to https key.
+    	Path to https key.
   -p string
-        Port to listen. (default "8080")
-  -v    Print version information.
+    	Port to listen. (default "3000")
+  -v	Print version information.
 ```
