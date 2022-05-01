@@ -1,0 +1,10 @@
+{
+  "name": "@tarocch1/actions",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@actions/core": "^1.7.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.0.1"
+  }
+}

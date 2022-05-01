@@ -1,4 +1,4 @@
-/web/node_modules
+node_modules
 
 /static
 /file-admin

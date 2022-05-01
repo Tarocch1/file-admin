@@ -16,26 +16,24 @@ jobs:
         name: Setup go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.15'
+          go-version: '1.18'
       - id: setup_nodejs
         name: Setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: 'lts/*'
       - id: npm_ci
         name: npm ci
-        run: npm ci
-      - id: tag_name
-        name: Get tag name
-        uses: ./.github/actions/tag-name
-        with:
-          ref: ${{ github.ref }}
+        run: |
+          cd .github/actions
+          npm ci
       - id: build
         name: Build
         uses: ./.github/actions/build
         env:
-          VERSION: ${{ steps.tag_name.outputs.tag }}
           COMMIT_ID: ${{ github.sha }}
+        with:
+          ref: ${{ github.ref }}
       - id: create_release
         name: Create Release
         uses: actions/create-release@v1.1.4

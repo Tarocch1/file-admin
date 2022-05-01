@@ -1,6 +1,11 @@
 name: build
 description: Build
 
+inputs:
+  ref:
+    description: 'ref'
+    required: true
+
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'index.js'
