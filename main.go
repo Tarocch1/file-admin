@@ -1,53 +1,38 @@
 package main
 
 import (
-	"flag"
+	"embed"
 	"fmt"
-	"log"
-	"net/http"
+
+	"github.com/Tarocch1/file-admin/common"
 )
 
-var workDir string
 var (
-	version   = ""
-	goVersion = ""
-	buildTime = ""
-	commitID  = ""
+	Version   = ""
+	GoVersion = ""
+	BuildTime = ""
+	CommitID  = ""
 )
+
+//go:embed static
+var static embed.FS
 
 func init() {
-	initFlag()
+	common.InitFlag()
 }
 
 func main() {
-	flag.Parse()
+	common.ParseFlag()
 
-	if flagVersion {
-		fmt.Println("Version:", version)
-		fmt.Println("Go Version:", goVersion)
-		fmt.Println("Build Time:", buildTime)
-		fmt.Println("Git Commit ID:", commitID)
+	if common.FlagVersion {
+		fmt.Println("Version:", Version)
+		fmt.Println("Go Version:", GoVersion)
+		fmt.Println("Build Time:", BuildTime)
+		fmt.Println("Git Commit ID:", CommitID)
 		return
 	}
 
-	initAuth()
+	common.GetRootDir()
 
-	var err error
-	workDir, err = getWorkDir()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	host := flagHost + ":" + flagPort
-
-	mux := http.NewServeMux()
-	mux.Handle("/", http.HandlerFunc(basicAuth(mainHandler)))
-
-	log.Print("Starting serve ", workDir, " at ", host, ".")
-
-	if flagHTTPSCert != "" && flagHTTPSKey != "" {
-		log.Fatal(http.ListenAndServeTLS(host, flagHTTPSCert, flagHTTPSKey, mux))
-	} else {
-		log.Fatal(http.ListenAndServe(host, mux))
-	}
+	StartServer()
 }
