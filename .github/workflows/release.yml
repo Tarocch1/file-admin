@@ -27,6 +27,12 @@ jobs:
         run: |
           cd .github/actions
           npm ci
+      - id: build_web
+        name: Build web
+        run: |
+          cd web
+          npm ci
+          npm run build
       - id: build
         name: Build
         uses: ./.github/actions/build
