@@ -1,10 +1,11 @@
 import { useCallback } from 'react'
-import { Breadcrumb, Table } from 'antd'
+import { Breadcrumb, Table, Button, Popconfirm } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import {
   HomeOutlined,
   FolderOpenTwoTone,
   FileOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 
@@ -17,6 +18,7 @@ export interface IDataTableProp {
   data: LsResultItem[]
   onSetPaths: (paths: string[]) => void
   onClickName: (item: LsResultItem) => void
+  onRm: (item: LsResultItem) => void
 }
 
 export default function DataTable({
@@ -25,6 +27,7 @@ export default function DataTable({
   data,
   onSetPaths,
   onClickName,
+  onRm,
 }: IDataTableProp) {
   const renderTitle = useCallback(() => {
     return (
@@ -63,8 +66,8 @@ export default function DataTable({
       key: 'name',
       title: 'Name',
       dataIndex: 'name',
-      render: (name: string, record) => {
-        return <a onClick={() => onClickName(record)}>{name}</a>
+      render: (name: string, item) => {
+        return <a onClick={() => onClickName(item)}>{name}</a>
       },
     },
     {
@@ -81,6 +84,24 @@ export default function DataTable({
       title: 'Size',
       dataIndex: 'size',
       render: formatSize,
+      width: 150,
+    },
+    {
+      key: 'name',
+      title: 'Operation',
+      render: (item: LsResultItem) => {
+        return (
+          <div>
+            <Popconfirm
+              title={`Are you sure to rm '${item.name}'?`}
+              arrowPointAtCenter
+              onConfirm={() => onRm(item)}
+            >
+              <Button size="small" icon={<DeleteOutlined />} danger />
+            </Popconfirm>
+          </div>
+        )
+      },
       width: 150,
     },
   ]

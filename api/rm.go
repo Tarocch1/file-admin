@@ -9,12 +9,12 @@ import (
 	"github.com/Tarocch1/file-admin/common"
 )
 
-func MkdirHandler(w http.ResponseWriter, r *http.Request) {
+func RmHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	// 获取 path 参数
 	path := r.FormValue("path")
-	dir := r.FormValue("dir")
+	target := r.FormValue("target")
 
 	// 计算出工作路径
 	workingPath, err := common.GetWorkingPath(path)
@@ -23,13 +23,13 @@ func MkdirHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	targetPath := filepath.Join(workingPath, dir)
-	if !common.PathNotExist(targetPath) {
-		ErrorHandler(w, http.StatusConflict, errors.New("dir exists"))
+	targetPath := filepath.Join(workingPath, target)
+	if common.PathNotExist(targetPath) {
+		ErrorHandler(w, http.StatusNotFound, errors.New("target not exists"))
 		return
 	}
 
-	err = os.MkdirAll(targetPath, 0755)
+	err = os.RemoveAll(targetPath)
 	if err != nil {
 		ErrorHandler(w, http.StatusInternalServerError, err)
 		return

@@ -31,3 +31,19 @@ export async function mkdir(path: string, dir: string) {
   }
   return false
 }
+
+export async function rm(path: string, target: string) {
+  const data = new FormData()
+  data.append('path', path)
+  data.append('target', target)
+
+  const res = await request('/api/rm', {
+    method: 'POST',
+    body: data,
+  })
+
+  if (res) {
+    return true
+  }
+  return false
+}

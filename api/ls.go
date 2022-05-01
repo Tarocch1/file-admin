@@ -30,7 +30,7 @@ func LsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 判断目标路径是否存在
 	if common.PathNotExist(workingPath) {
-		ErrorHandler(w, http.StatusNotFound, errors.New("path is invalid"))
+		ErrorHandler(w, http.StatusNotFound, errors.New("path not exists"))
 		return
 	}
 	// 判断目标路径是否是目录
