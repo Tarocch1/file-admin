@@ -23,7 +23,7 @@ const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
         url: uploadUrl,
         headers,
         name: assetName,
-        file: fs.readFileSync(assetPath),
+        data: fs.readFileSync(assetPath),
       })
     }
   } catch (error) {
