@@ -19,8 +19,9 @@ func StartServer() {
 	mux.HandleFunc("/", middleware.Middleware(http.FileServer(http.FS(fsRoot)).ServeHTTP))
 
 	mux.HandleFunc("/api/ls", middleware.Middleware(api.LsHandler))
+	mux.HandleFunc("/api/mkdir", middleware.Middleware(api.MkdirHandler))
 
-	log.Printf("Starting serve %s at %s", common.WorkDir, host)
+	log.Printf("Starting serve %s at %s", common.RootDir, host)
 
 	if common.FlagHTTPSCert != "" && common.FlagHTTPSKey != "" {
 		log.Fatal(http.ListenAndServeTLS(host, common.FlagHTTPSCert, common.FlagHTTPSKey, mux))

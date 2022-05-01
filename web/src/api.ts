@@ -1,7 +1,7 @@
 import { request } from '@/utils/request'
 import { LsResultItem } from '@/types'
 
-export async function listDir(path: string) {
+export async function ls(path: string) {
   const data = new FormData()
   data.append('path', path)
 
@@ -14,4 +14,20 @@ export async function listDir(path: string) {
     return res as LsResultItem[]
   }
   return []
+}
+
+export async function mkdir(path: string, dir: string) {
+  const data = new FormData()
+  data.append('path', path)
+  data.append('dir', dir)
+
+  const res = await request('/api/mkdir', {
+    method: 'POST',
+    body: data,
+  })
+
+  if (res) {
+    return true
+  }
+  return false
 }

@@ -21,26 +21,26 @@ func LsHandler(w http.ResponseWriter, r *http.Request) {
 	// 获取 path 参数
 	path := r.FormValue("path")
 
-	// 计算出目标路径
-	targetPath, err := common.GetTargetPath(path)
+	// 计算出工作路径
+	workingPath, err := common.GetWorkingPath(path)
 	if err != nil {
 		ErrorHandler(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	// 判断目标路径是否存在
-	if common.PathNotExist(targetPath) {
+	if common.PathNotExist(workingPath) {
 		ErrorHandler(w, http.StatusNotFound, errors.New("path is invalid"))
 		return
 	}
 	// 判断目标路径是否是目录
-	if !common.PathIsDir(targetPath) {
+	if !common.PathIsDir(workingPath) {
 		ErrorHandler(w, http.StatusBadRequest, errors.New("path is not dir"))
 		return
 	}
 
 	// 读取文件
-	allItems, err := ioutil.ReadDir(targetPath)
+	allItems, err := ioutil.ReadDir(workingPath)
 	if err != nil {
 		ErrorHandler(w, http.StatusInternalServerError, err)
 		return

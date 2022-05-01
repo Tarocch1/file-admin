@@ -32,7 +32,7 @@ func main() {
 		return
 	}
 
-	common.GetWorkDir()
+	common.GetRootDir()
 
 	StartServer()
 }

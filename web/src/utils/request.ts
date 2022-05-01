@@ -4,6 +4,7 @@ export async function request<T>(url: string, init: RequestInit) {
   try {
     const res = await fetch(url, init)
     if (res.ok) {
+      message.success(url)
       return (await res.json()) as T
     } else {
       console.log(res)
