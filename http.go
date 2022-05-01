@@ -18,7 +18,7 @@ func StartServer() {
 
 	mux.HandleFunc("/", middleware.Middleware(http.FileServer(http.FS(fsRoot)).ServeHTTP))
 
-	mux.HandleFunc("/api/list-dir", middleware.Middleware(api.ListDirHandler))
+	mux.HandleFunc("/api/ls", middleware.Middleware(api.LsHandler))
 
 	log.Printf("Starting serve %s at %s", common.WorkDir, host)
 

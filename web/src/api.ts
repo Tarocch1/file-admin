@@ -1,17 +1,17 @@
 import { request } from '@/utils/request'
-import { ListDirResultItem } from '@/types'
+import { LsResultItem } from '@/types'
 
 export async function listDir(path: string) {
   const data = new FormData()
   data.append('path', path)
 
-  const res = await request('/api/list-dir', {
+  const res = await request('/api/ls', {
     method: 'POST',
     body: data,
   })
 
   if (res) {
-    return res as ListDirResultItem[]
+    return res as LsResultItem[]
   }
   return []
 }

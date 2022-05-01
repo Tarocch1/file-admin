@@ -1,4 +1,4 @@
-export type ListDirResultItem = {
+export type LsResultItem = {
   name: string
   isDir: boolean
   time: number

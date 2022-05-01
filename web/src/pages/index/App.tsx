@@ -10,12 +10,12 @@ import dayjs from 'dayjs'
 
 import { listDir } from '@/api'
 import { formatSize } from '@/utils'
-import { ListDirResultItem } from '@/types'
+import { LsResultItem } from '@/types'
 
 export default function App() {
   const [loading, setLoading] = useState<boolean>(false)
   const [paths, setPaths] = useState<string[]>([])
-  const [data, setData] = useState<ListDirResultItem[]>([])
+  const [data, setData] = useState<LsResultItem[]>([])
 
   useEffect(() => {
     setLoading(true)
@@ -26,7 +26,7 @@ export default function App() {
   }, [paths])
 
   const onClickName = useCallback(
-    (row: ListDirResultItem) => {
+    (row: LsResultItem) => {
       if (row.isDir) {
         setPaths([...paths, row.name])
       } else {
@@ -36,7 +36,7 @@ export default function App() {
     [paths]
   )
 
-  const columns: ColumnsType<ListDirResultItem> = [
+  const columns: ColumnsType<LsResultItem> = [
     {
       key: 'name',
       title: '',
@@ -65,12 +65,14 @@ export default function App() {
       render: (time: number) => {
         return dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')
       },
+      width: 200,
     },
     {
       key: 'name',
       title: 'Size',
       dataIndex: 'size',
       render: formatSize,
+      width: 150,
     },
   ]
 
