@@ -1,3 +1,3 @@
-module github.com/Tarocch1/file-server
+module github.com/Tarocch1/file-admin
 
-go 1.15
+go 1.18
