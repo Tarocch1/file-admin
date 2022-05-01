@@ -20,10 +20,6 @@ func ListDirHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 获取 path 参数
 	path := r.FormValue("path")
-	if path == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	// 计算出目标路径
 	targetPath, err := common.GetTargetPath(path)

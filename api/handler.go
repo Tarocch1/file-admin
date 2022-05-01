@@ -16,7 +16,7 @@ func JsonHandler(w http.ResponseWriter, data interface{}) {
 		ErrorHandler(w, http.StatusInternalServerError, err)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	w.Write(jsonBytes)
 }

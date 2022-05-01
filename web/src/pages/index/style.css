@@ -1,0 +1,5 @@
+@import 'antd/dist/antd.css';
+
+#app {
+  padding: 24px;
+}
