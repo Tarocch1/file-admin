@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 
-import { ls as lsApi, mkdir as mkdirApi, mv as mvApi, rm as rmApi } from '@/api'
+import {
+  ls as lsApi,
+  mkdir as mkdirApi,
+  mv as mvApi,
+  rm as rmApi,
+  upload as uploadApi,
+} from '@/api'
 import { LsResultItem } from '@/types'
 import Action from './components/Action'
 import DataTable from './components/DataTable'
@@ -47,12 +53,26 @@ export default function App() {
     [paths, ls]
   )
 
+  const upload = useCallback(
+    async (file: File) => {
+      const res = await uploadApi(paths.join('/'), file)
+      if (res) {
+        ls()
+      }
+    },
+    [paths, ls]
+  )
+
   const onClickName = useCallback(
     (item: LsResultItem) => {
       if (item.isDir) {
         setPaths([...paths, item.name])
       } else {
-        window.open(`/api/download?target=${[...paths, item.name].join('/')}`)
+        window.open(
+          `/api/download?target=${[...paths, item.name].join('/')}`,
+          '_blank',
+          'noopener=yes,noreferrer=yes'
+        )
       }
     },
     [paths]
@@ -64,7 +84,7 @@ export default function App() {
 
   return (
     <div>
-      <Action onMkdir={mkdir} />
+      <Action onMkdir={mkdir} onUpload={upload} />
       <DataTable
         loading={loading}
         paths={paths}

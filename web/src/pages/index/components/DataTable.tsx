@@ -27,7 +27,7 @@ export interface IDataTableProp {
   data: LsResultItem[]
   onSetPaths: (paths: string[]) => void
   onClickName: (item: LsResultItem) => void
-  onMv: (item: LsResultItem, target: string) => Promise<void>
+  onMv: (item: LsResultItem, target: string) => void
   onRm: (item: LsResultItem) => void
 }
 
@@ -42,21 +42,18 @@ export default function DataTable({
 }: IDataTableProp) {
   const [mvValue, setMvValue] = useState<string>('')
   const [showMv, setShowMv] = useState<boolean>(false)
-  const [mvLoading, setMvLoading] = useState<boolean>(false)
   const curMvItem = useRef<LsResultItem>()
 
   const mvDisabled = useMemo(() => mvValue === '', [mvValue])
 
   function closeMv() {
-    setMvLoading(false)
     setShowMv(false)
     setMvValue('')
     curMvItem.current = undefined
   }
 
   async function mv() {
-    setMvLoading(true)
-    await onMv(curMvItem.current!, mvValue)
+    onMv(curMvItem.current!, mvValue)
     closeMv()
   }
 
@@ -135,6 +132,7 @@ export default function DataTable({
             />
             <Popconfirm
               title={`Are you sure to rm '${item.name}'?`}
+              placement="topRight"
               arrowPointAtCenter
               onConfirm={() => onRm(item)}
             >
@@ -167,7 +165,6 @@ export default function DataTable({
       <Modal
         visible={showMv}
         title="Rename"
-        confirmLoading={mvLoading}
         okButtonProps={{
           disabled: mvDisabled,
         }}

@@ -1,26 +1,26 @@
-import { Fragment, useState, useMemo } from 'react'
+import { Fragment, useState, useMemo, useRef } from 'react'
 import { Space, Button, Modal, Input } from 'antd'
-import { FolderAddOutlined } from '@ant-design/icons'
+import { FolderAddOutlined, CloudUploadOutlined } from '@ant-design/icons'
 
 export interface IActionProp {
-  onMkdir: (dir: string) => Promise<void>
+  onMkdir: (dir: string) => void
+  onUpload: (file: File) => void
 }
 
-export default function Action({ onMkdir }: IActionProp) {
+export default function Action({ onMkdir, onUpload }: IActionProp) {
   const [mkdirValue, setMkdirValue] = useState<string>('')
   const [showMkdir, setShowMkdir] = useState<boolean>(false)
-  const [mkdirLoading, setMkdirLoading] = useState<boolean>(false)
 
   const mkdirDisabled = useMemo(() => mkdirValue === '', [mkdirValue])
 
+  const uploadRef = useRef<HTMLInputElement>(null)
+
   async function mkdir() {
-    setMkdirLoading(true)
-    await onMkdir(mkdirValue)
+    onMkdir(mkdirValue)
     closeMkdir()
   }
 
   function closeMkdir() {
-    setMkdirLoading(false)
     setShowMkdir(false)
     setMkdirValue('')
   }
@@ -35,11 +35,19 @@ export default function Action({ onMkdir }: IActionProp) {
         >
           New Folder
         </Button>
+        <Button
+          type="primary"
+          icon={<CloudUploadOutlined />}
+          onClick={() => {
+            uploadRef.current?.click()
+          }}
+        >
+          Upload File
+        </Button>
       </Space>
       <Modal
         visible={showMkdir}
         title="New Folder"
-        confirmLoading={mkdirLoading}
         okButtonProps={{
           disabled: mkdirDisabled,
         }}
@@ -54,6 +62,15 @@ export default function Action({ onMkdir }: IActionProp) {
           onChange={(e) => setMkdirValue(e.target.value)}
         />
       </Modal>
+      <input
+        ref={uploadRef}
+        type="file"
+        multiple={false}
+        style={{ display: 'none' }}
+        onChange={(e) => {
+          onUpload(e.target.files![0])
+        }}
+      />
     </Fragment>
   )
 }

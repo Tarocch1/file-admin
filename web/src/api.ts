@@ -76,3 +76,24 @@ export async function rm(path: string, target: string) {
   }
   return false
 }
+
+export async function upload(path: string, file: File) {
+  const data = new FormData()
+  data.append('path', path)
+  data.append('target', file.name)
+  data.append('file', file)
+
+  const res = await request(
+    '/api/upload',
+    {
+      method: 'POST',
+      body: data,
+    },
+    true
+  )
+
+  if (res) {
+    return true
+  }
+  return false
+}

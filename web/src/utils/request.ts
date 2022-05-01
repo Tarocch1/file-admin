@@ -1,4 +1,5 @@
 import { message } from 'antd'
+import nProgress from 'nprogress'
 
 export async function request<T>(
   url: string,
@@ -6,6 +7,7 @@ export async function request<T>(
   showSuccess = false
 ) {
   try {
+    nProgress.start()
     const res = await fetch(url, init)
     if (res.ok) {
       showSuccess && message.success('success')
@@ -19,5 +21,7 @@ export async function request<T>(
     console.error(error)
     message.error(url)
     return null
+  } finally {
+    nProgress.done()
   }
 }
