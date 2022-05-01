@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 
-import { ls as lsApi, mkdir as mkdirApi, rm as rmApi } from '@/api'
+import { ls as lsApi, mkdir as mkdirApi, mv as mvApi, rm as rmApi } from '@/api'
 import { LsResultItem } from '@/types'
 import Action from './components/Action'
 import DataTable from './components/DataTable'
@@ -20,6 +20,16 @@ export default function App() {
   const mkdir = useCallback(
     async (dir: string) => {
       const res = await mkdirApi(paths.join('/'), dir)
+      if (res) {
+        ls()
+      }
+    },
+    [paths, ls]
+  )
+
+  const mv = useCallback(
+    async (item: LsResultItem, target: string) => {
+      const res = await mvApi(paths.join('/'), item.name, target)
       if (res) {
         ls()
       }
@@ -61,6 +71,7 @@ export default function App() {
         data={data}
         onSetPaths={setPaths}
         onClickName={onClickName}
+        onMv={mv}
         onRm={rm}
       />
     </div>

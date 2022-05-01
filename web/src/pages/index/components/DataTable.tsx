@@ -1,11 +1,20 @@
-import { useCallback } from 'react'
-import { Breadcrumb, Table, Button, Popconfirm } from 'antd'
+import { Fragment, useState, useCallback, useMemo, useRef } from 'react'
+import {
+  Breadcrumb,
+  Table,
+  Space,
+  Button,
+  Popconfirm,
+  Modal,
+  Input,
+} from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import {
   HomeOutlined,
   FolderOpenTwoTone,
   FileOutlined,
   DeleteOutlined,
+  FontSizeOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 
@@ -18,6 +27,7 @@ export interface IDataTableProp {
   data: LsResultItem[]
   onSetPaths: (paths: string[]) => void
   onClickName: (item: LsResultItem) => void
+  onMv: (item: LsResultItem, target: string) => Promise<void>
   onRm: (item: LsResultItem) => void
 }
 
@@ -27,8 +37,29 @@ export default function DataTable({
   data,
   onSetPaths,
   onClickName,
+  onMv,
   onRm,
 }: IDataTableProp) {
+  const [mvValue, setMvValue] = useState<string>('')
+  const [showMv, setShowMv] = useState<boolean>(false)
+  const [mvLoading, setMvLoading] = useState<boolean>(false)
+  const curMvItem = useRef<LsResultItem>()
+
+  const mvDisabled = useMemo(() => mvValue === '', [mvValue])
+
+  function closeMv() {
+    setMvLoading(false)
+    setShowMv(false)
+    setMvValue('')
+    curMvItem.current = undefined
+  }
+
+  async function mv() {
+    setMvLoading(true)
+    await onMv(curMvItem.current!, mvValue)
+    closeMv()
+  }
+
   const renderTitle = useCallback(() => {
     return (
       <Breadcrumb>
@@ -91,15 +122,30 @@ export default function DataTable({
       title: 'Operation',
       render: (item: LsResultItem) => {
         return (
-          <div>
+          <Space size="small">
+            <Button
+              size="small"
+              icon={<FontSizeOutlined />}
+              title="Rename"
+              onClick={() => {
+                curMvItem.current = item
+                setMvValue(item.name)
+                setShowMv(true)
+              }}
+            />
             <Popconfirm
               title={`Are you sure to rm '${item.name}'?`}
               arrowPointAtCenter
               onConfirm={() => onRm(item)}
             >
-              <Button size="small" icon={<DeleteOutlined />} danger />
+              <Button
+                size="small"
+                icon={<DeleteOutlined />}
+                danger
+                title="Delete"
+              />
             </Popconfirm>
-          </div>
+          </Space>
         )
       },
       width: 150,
@@ -107,15 +153,35 @@ export default function DataTable({
   ]
 
   return (
-    <Table
-      bordered
-      rowKey="name"
-      size="small"
-      title={renderTitle}
-      pagination={false}
-      loading={loading}
-      dataSource={data}
-      columns={columns}
-    />
+    <Fragment>
+      <Table
+        bordered
+        rowKey="name"
+        size="small"
+        title={renderTitle}
+        pagination={false}
+        loading={loading}
+        dataSource={data}
+        columns={columns}
+      />
+      <Modal
+        visible={showMv}
+        title="Rename"
+        confirmLoading={mvLoading}
+        okButtonProps={{
+          disabled: mvDisabled,
+        }}
+        onOk={mv}
+        onCancel={closeMv}
+        destroyOnClose
+      >
+        <Input
+          placeholder="New Name"
+          value={mvValue}
+          autoFocus
+          onChange={(e) => setMvValue(e.target.value)}
+        />
+      </Modal>
+    </Fragment>
   )
 }

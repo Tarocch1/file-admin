@@ -1,5 +1,5 @@
 import { Fragment, useState, useMemo } from 'react'
-import { Button, Modal, Input } from 'antd'
+import { Space, Button, Modal, Input } from 'antd'
 import { FolderAddOutlined } from '@ant-design/icons'
 
 export interface IActionProp {
@@ -27,7 +27,7 @@ export default function Action({ onMkdir }: IActionProp) {
 
   return (
     <Fragment>
-      <div style={{ marginBottom: 16 }}>
+      <Space style={{ marginBottom: 16 }}>
         <Button
           type="primary"
           icon={<FolderAddOutlined />}
@@ -35,7 +35,7 @@ export default function Action({ onMkdir }: IActionProp) {
         >
           New Folder
         </Button>
-      </div>
+      </Space>
       <Modal
         visible={showMkdir}
         title="New Folder"
@@ -50,6 +50,7 @@ export default function Action({ onMkdir }: IActionProp) {
         <Input
           placeholder="Folder Path"
           value={mkdirValue}
+          autoFocus
           onChange={(e) => setMkdirValue(e.target.value)}
         />
       </Modal>

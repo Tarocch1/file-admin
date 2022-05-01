@@ -21,10 +21,35 @@ export async function mkdir(path: string, dir: string) {
   data.append('path', path)
   data.append('dir', dir)
 
-  const res = await request('/api/mkdir', {
-    method: 'POST',
-    body: data,
-  })
+  const res = await request(
+    '/api/mkdir',
+    {
+      method: 'POST',
+      body: data,
+    },
+    true
+  )
+
+  if (res) {
+    return true
+  }
+  return false
+}
+
+export async function mv(path: string, from: string, target: string) {
+  const data = new FormData()
+  data.append('path', path)
+  data.append('from', from)
+  data.append('target', target)
+
+  const res = await request(
+    '/api/mv',
+    {
+      method: 'POST',
+      body: data,
+    },
+    true
+  )
 
   if (res) {
     return true
@@ -37,10 +62,14 @@ export async function rm(path: string, target: string) {
   data.append('path', path)
   data.append('target', target)
 
-  const res = await request('/api/rm', {
-    method: 'POST',
-    body: data,
-  })
+  const res = await request(
+    '/api/rm',
+    {
+      method: 'POST',
+      body: data,
+    },
+    true
+  )
 
   if (res) {
     return true

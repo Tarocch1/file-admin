@@ -20,6 +20,7 @@ func StartServer() {
 
 	mux.HandleFunc("/api/ls", middleware.Middleware(api.LsHandler))
 	mux.HandleFunc("/api/mkdir", middleware.Middleware(api.MkdirHandler))
+	mux.HandleFunc("/api/mv", middleware.Middleware(api.MvHandler))
 	mux.HandleFunc("/api/rm", middleware.Middleware(api.RmHandler))
 
 	log.Printf("Starting serve %s at %s", common.RootDir, host)
