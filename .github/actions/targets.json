@@ -1,12 +1,165 @@
 [
   {
-    "out": "file-admin_linux_64",
+    "out": "file-server_linux_32",
+    "os": "linux",
+    "arch": "386"
+  },
+  {
+    "out": "file-server_linux_64",
     "os": "linux",
     "arch": "amd64"
   },
   {
-    "out": "file-admin_macos_64",
+    "out": "file-server_linux_arm32_v5",
+    "os": "linux",
+    "arch": "arm",
+    "arm": "5"
+  },
+  {
+    "out": "file-server_linux_arm32_v6",
+    "os": "linux",
+    "arch": "arm",
+    "arm": "6"
+  },
+  {
+    "out": "file-server_linux_arm32_v7a",
+    "os": "linux",
+    "arch": "arm",
+    "arm": "7"
+  },
+  {
+    "out": "file-server_linux_arm64_v8a",
+    "os": "linux",
+    "arch": "arm64"
+  },
+  {
+    "out": "file-server_linux_mips32",
+    "os": "linux",
+    "arch": "mips"
+  },
+  {
+    "out": "file-server_linux_mips32_softfloat",
+    "os": "linux",
+    "arch": "mips",
+    "mips": "softfloat"
+  },
+  {
+    "out": "file-server_linux_mips32le",
+    "os": "linux",
+    "arch": "mipsle"
+  },
+  {
+    "out": "file-server_linux_mips32le_softfloat",
+    "os": "linux",
+    "arch": "mipsle",
+    "mips": "softfloat"
+  },
+  {
+    "out": "file-server_linux_mips64",
+    "os": "linux",
+    "arch": "mips64"
+  },
+  {
+    "out": "file-server_linux_mips64le",
+    "os": "linux",
+    "arch": "mips64le"
+  },
+  {
+    "out": "file-server_linux_ppc64",
+    "os": "linux",
+    "arch": "ppc64"
+  },
+  {
+    "out": "file-server_linux_ppc64le",
+    "os": "linux",
+    "arch": "ppc64le"
+  },
+  {
+    "out": "file-server_linux_riscv64",
+    "os": "linux",
+    "arch": "riscv64"
+  },
+  {
+    "out": "file-server_linux_s390x",
+    "os": "linux",
+    "arch": "s390x"
+  },
+  {
+    "out": "file-server_macos_64",
     "os": "darwin",
     "arch": "amd64"
+  },
+  {
+    "out": "file-server_macos_arm64_v8a",
+    "os": "darwin",
+    "arch": "arm64"
+  },
+  {
+    "out": "file-server_freebsd_32",
+    "os": "freebsd",
+    "arch": "386"
+  },
+  {
+    "out": "file-server_freebsd_64",
+    "os": "freebsd",
+    "arch": "amd64"
+  },
+  {
+    "out": "file-server_freebsd_arm32_v7a",
+    "os": "freebsd",
+    "arch": "arm",
+    "arm": "7"
+  },
+  {
+    "out": "file-server_freebsd_arm64_v8a",
+    "os": "freebsd",
+    "arch": "arm64"
+  },
+  {
+    "out": "file-server_openbsd_32",
+    "os": "openbsd",
+    "arch": "386"
+  },
+  {
+    "out": "file-server_openbsd_64",
+    "os": "openbsd",
+    "arch": "amd64"
+  },
+  {
+    "out": "file-server_openbsd_arm32_v7a",
+    "os": "openbsd",
+    "arch": "arm",
+    "arm": "7"
+  },
+  {
+    "out": "file-server_openbsd_arm64_v8a",
+    "os": "openbsd",
+    "arch": "arm64"
+  },
+  {
+    "out": "file-server_windows_32.exe",
+    "os": "windows",
+    "arch": "386"
+  },
+  {
+    "out": "file-server_windows_64.exe",
+    "os": "windows",
+    "arch": "amd64"
+  },
+  {
+    "out": "file-server_windows_arm32_v7a.exe",
+    "os": "windows",
+    "arch": "arm",
+    "arm": "7"
+  },
+  {
+    "out": "file-server_windows_arm64_v8a.exe",
+    "os": "windows",
+    "arch": "arm64"
+  },
+  {
+    "out": "file-server_android_arm64_v8a",
+    "os": "android",
+    "arch": "arm64"
   }
 ]

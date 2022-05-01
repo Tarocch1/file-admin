@@ -40,11 +40,6 @@ jobs:
           COMMIT_ID: ${{ github.sha }}
         with:
           ref: ${{ github.ref }}
-      - id: test
-        name: test
-        run: |
-          ls -lah
-          ./file-admin_linux_64 -v
       - id: create_release
         name: Create Release
         uses: actions/create-release@v1.1.4
