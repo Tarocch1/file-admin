@@ -1,7 +1,6 @@
 package api
 
 import (
-	"errors"
 	"io/ioutil"
 	"net/http"
 
@@ -25,17 +24,6 @@ func LsHandler(w http.ResponseWriter, r *http.Request) {
 	workingPath, err := common.GetWorkingPath(path)
 	if err != nil {
 		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
-	}
-
-	// 判断目标路径是否存在
-	if common.PathNotExist(workingPath) {
-		ErrorHandler(w, http.StatusNotFound, errors.New("path not exists"))
-		return
-	}
-	// 判断目标路径是否是目录
-	if !common.PathIsDir(workingPath) {
-		ErrorHandler(w, http.StatusBadRequest, errors.New("path is not dir"))
 		return
 	}
 

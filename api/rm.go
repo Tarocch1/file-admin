@@ -1,7 +1,6 @@
 package api
 
 import (
-	"errors"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -24,10 +23,6 @@ func RmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	targetPath := filepath.Join(workingPath, target)
-	if common.PathNotExist(targetPath) {
-		ErrorHandler(w, http.StatusNotFound, errors.New("target not exists"))
-		return
-	}
 
 	err = os.RemoveAll(targetPath)
 	if err != nil {

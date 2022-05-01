@@ -1,7 +1,6 @@
 package api
 
 import (
-	"errors"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -24,10 +23,6 @@ func MkdirHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	targetPath := filepath.Join(workingPath, dir)
-	if !common.PathNotExist(targetPath) {
-		ErrorHandler(w, http.StatusConflict, errors.New("dir exists"))
-		return
-	}
 
 	err = os.MkdirAll(targetPath, 0755)
 	if err != nil {
