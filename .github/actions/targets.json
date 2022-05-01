@@ -1,5 +1,10 @@
 [
   {
+    "out": "file-admin_linux_64",
+    "os": "linux",
+    "arch": "amd64"
+  },
+  {
     "out": "file-admin_macos_64",
     "os": "darwin",
     "arch": "amd64"
