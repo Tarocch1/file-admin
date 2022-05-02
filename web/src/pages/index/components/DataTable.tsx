@@ -1,13 +1,5 @@
-import { Fragment, useState, useCallback, useMemo, useRef } from 'react'
-import {
-  Breadcrumb,
-  Table,
-  Space,
-  Button,
-  Popconfirm,
-  Modal,
-  Input,
-} from 'antd'
+import { Fragment, useState, useCallback } from 'react'
+import { Breadcrumb, Table, Space, Button, Popconfirm } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import {
   HomeOutlined,
@@ -15,11 +7,14 @@ import {
   FileOutlined,
   DeleteOutlined,
   FontSizeOutlined,
+  EditOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
 
 import { formatSize } from '@/utils'
 import { LsResultItem } from '@/types'
+import InputModal from '@/components/InputModal'
+import Edit from './Edit'
 
 export interface IDataTableProp {
   loading: boolean
@@ -27,8 +22,9 @@ export interface IDataTableProp {
   data: LsResultItem[]
   onSetPaths: (paths: string[]) => void
   onClickName: (item: LsResultItem) => void
-  onMv: (item: LsResultItem, target: string) => void
-  onRm: (item: LsResultItem) => void
+  onMv: (target: string, to: string) => void
+  onRm: (target: string) => void
+  onEdit: (target: string, value: string) => void
 }
 
 export default function DataTable({
@@ -39,22 +35,34 @@ export default function DataTable({
   onClickName,
   onMv,
   onRm,
+  onEdit,
 }: IDataTableProp) {
-  const [mvValue, setMvValue] = useState<string>('')
   const [showMv, setShowMv] = useState<boolean>(false)
-  const curMvItem = useRef<LsResultItem>()
+  const [mvTarget, setMvTarget] = useState<string>('')
+  const [mvValue, setMvValue] = useState<string>('')
+  const [showEdit, setShowEdit] = useState<boolean>(false)
+  const [editTarget, setEditTarget] = useState<string>('')
 
-  const mvDisabled = useMemo(() => mvValue === '', [mvValue])
+  function mv() {
+    onMv(mvTarget, mvValue)
+    closeMv()
+  }
 
   function closeMv() {
     setShowMv(false)
     setMvValue('')
-    curMvItem.current = undefined
+    setMvTarget('')
   }
 
-  async function mv() {
-    onMv(curMvItem.current!, mvValue)
-    closeMv()
+  function edit(value: string) {
+    onEdit(editTarget, value)
+    setShowEdit(false)
+    setEditTarget('')
+  }
+
+  function closeEdit() {
+    setShowEdit(false)
+    setEditTarget('')
   }
 
   const renderTitle = useCallback(() => {
@@ -125,16 +133,27 @@ export default function DataTable({
               icon={<FontSizeOutlined />}
               title="Rename"
               onClick={() => {
-                curMvItem.current = item
+                setMvTarget(item.name)
                 setMvValue(item.name)
                 setShowMv(true)
               }}
             />
+            {!item.isDir && (
+              <Button
+                size="small"
+                icon={<EditOutlined />}
+                title="Edit"
+                onClick={() => {
+                  setEditTarget(item.name)
+                  setShowEdit(true)
+                }}
+              />
+            )}
             <Popconfirm
               title={`Are you sure to rm '${item.name}'?`}
               placement="topRight"
               arrowPointAtCenter
-              onConfirm={() => onRm(item)}
+              onConfirm={() => onRm(item.name)}
             >
               <Button
                 size="small"
@@ -162,23 +181,22 @@ export default function DataTable({
         dataSource={data}
         columns={columns}
       />
-      <Modal
+      <InputModal
         visible={showMv}
         title="Rename"
-        okButtonProps={{
-          disabled: mvDisabled,
-        }}
+        placeholder="New Name"
+        value={mvValue}
         onOk={mv}
         onCancel={closeMv}
-        destroyOnClose
-      >
-        <Input
-          placeholder="New Name"
-          value={mvValue}
-          autoFocus
-          onChange={(e) => setMvValue(e.target.value)}
-        />
-      </Modal>
+        onChange={(value) => setMvValue(value)}
+      />
+      <Edit
+        visible={showEdit}
+        paths={paths}
+        target={editTarget}
+        onOk={edit}
+        onCancel={closeEdit}
+      />
     </Fragment>
   )
 }

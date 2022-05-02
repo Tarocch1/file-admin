@@ -1,28 +1,19 @@
 package api
 
 import (
-	"io/ioutil"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	"github.com/Tarocch1/file-admin/common"
 )
 
-func UploadHandler(w http.ResponseWriter, r *http.Request) {
+func EditHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	path := r.FormValue("path")
 	target := r.FormValue("target")
-	file, _, err := r.FormFile("file")
-	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
-	}
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
-	}
+	content := r.FormValue("content")
 
 	workingPath, err := common.GetWorkingPath(path)
 	if err != nil {
@@ -32,7 +23,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	targetPath := filepath.Join(workingPath, target)
 
-	err = ioutil.WriteFile(targetPath, fileBytes, 0755)
+	err = os.WriteFile(targetPath, []byte(content), 0644)
 	if err != nil {
 		ErrorHandler(w, http.StatusInternalServerError, err)
 		return

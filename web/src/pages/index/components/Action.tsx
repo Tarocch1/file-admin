@@ -1,6 +1,8 @@
-import { Fragment, useState, useMemo, useRef } from 'react'
-import { Space, Button, Modal, Input } from 'antd'
+import { Fragment, useState, useRef } from 'react'
+import { Space, Button } from 'antd'
 import { FolderAddOutlined, CloudUploadOutlined } from '@ant-design/icons'
+
+import InputModal from '@/components/InputModal'
 
 export interface IActionProp {
   onMkdir: (dir: string) => void
@@ -8,10 +10,8 @@ export interface IActionProp {
 }
 
 export default function Action({ onMkdir, onUpload }: IActionProp) {
-  const [mkdirValue, setMkdirValue] = useState<string>('')
   const [showMkdir, setShowMkdir] = useState<boolean>(false)
-
-  const mkdirDisabled = useMemo(() => mkdirValue === '', [mkdirValue])
+  const [mkdirValue, setMkdirValue] = useState<string>('')
 
   const uploadRef = useRef<HTMLInputElement>(null)
 
@@ -45,23 +45,15 @@ export default function Action({ onMkdir, onUpload }: IActionProp) {
           Upload File
         </Button>
       </Space>
-      <Modal
+      <InputModal
         visible={showMkdir}
         title="New Folder"
-        okButtonProps={{
-          disabled: mkdirDisabled,
-        }}
+        placeholder="Folder Path"
+        value={mkdirValue}
         onOk={mkdir}
         onCancel={closeMkdir}
-        destroyOnClose
-      >
-        <Input
-          placeholder="Folder Path"
-          value={mkdirValue}
-          autoFocus
-          onChange={(e) => setMkdirValue(e.target.value)}
-        />
-      </Modal>
+        onChange={(value) => setMkdirValue(value)}
+      />
       <input
         ref={uploadRef}
         type="file"

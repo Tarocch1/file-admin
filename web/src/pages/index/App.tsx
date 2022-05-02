@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   ls as lsApi,
   mkdir as mkdirApi,
+  edit as editApt,
   mv as mvApi,
   rm as rmApi,
   upload as uploadApi,
@@ -24,8 +25,18 @@ export default function App() {
   }, [paths])
 
   const mkdir = useCallback(
-    async (dir: string) => {
-      const res = await mkdirApi(paths.join('/'), dir)
+    async (target: string) => {
+      const res = await mkdirApi(paths.join('/'), target)
+      if (res) {
+        ls()
+      }
+    },
+    [paths, ls]
+  )
+
+  const edit = useCallback(
+    async (target: string, value: string) => {
+      const res = await editApt(paths.join('/'), target, value)
       if (res) {
         ls()
       }
@@ -34,8 +45,8 @@ export default function App() {
   )
 
   const mv = useCallback(
-    async (item: LsResultItem, target: string) => {
-      const res = await mvApi(paths.join('/'), item.name, target)
+    async (target: string, to: string) => {
+      const res = await mvApi(paths.join('/'), target, to)
       if (res) {
         ls()
       }
@@ -44,8 +55,8 @@ export default function App() {
   )
 
   const rm = useCallback(
-    async (item: LsResultItem) => {
-      const res = await rmApi(paths.join('/'), item.name)
+    async (target: string) => {
+      const res = await rmApi(paths.join('/'), target)
       if (res) {
         ls()
       }
@@ -91,6 +102,7 @@ export default function App() {
         data={data}
         onSetPaths={setPaths}
         onClickName={onClickName}
+        onEdit={edit}
         onMv={mv}
         onRm={rm}
       />

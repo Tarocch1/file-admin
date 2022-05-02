@@ -5,23 +5,23 @@ export async function ls(path: string) {
   const data = new FormData()
   data.append('path', path)
 
-  const res = await request('/api/ls', {
+  const res = await request<LsResultItem[]>('/api/ls', {
     method: 'POST',
     body: data,
   })
 
   if (res) {
-    return res as LsResultItem[]
+    return res
   }
   return []
 }
 
-export async function mkdir(path: string, dir: string) {
+export async function mkdir(path: string, target: string) {
   const data = new FormData()
   data.append('path', path)
-  data.append('dir', dir)
+  data.append('target', target)
 
-  const res = await request(
+  const res = await request<{}>(
     '/api/mkdir',
     {
       method: 'POST',
@@ -36,13 +36,46 @@ export async function mkdir(path: string, dir: string) {
   return false
 }
 
-export async function mv(path: string, from: string, target: string) {
+export async function cat(path: string, target: string) {
   const data = new FormData()
   data.append('path', path)
-  data.append('from', from)
   data.append('target', target)
 
-  const res = await request(
+  const res = await request<{ content: string }>('/api/cat', {
+    method: 'POST',
+    body: data,
+  })
+
+  if (res) {
+    return res
+  }
+  return false
+}
+
+export async function edit(path: string, target: string, content: string) {
+  const data = new FormData()
+  data.append('path', path)
+  data.append('target', target)
+  data.append('content', content)
+
+  const res = await request<{}>('/api/edit', {
+    method: 'POST',
+    body: data,
+  })
+
+  if (res) {
+    return true
+  }
+  return false
+}
+
+export async function mv(path: string, target: string, to: string) {
+  const data = new FormData()
+  data.append('path', path)
+  data.append('target', target)
+  data.append('to', to)
+
+  const res = await request<{}>(
     '/api/mv',
     {
       method: 'POST',
@@ -62,7 +95,7 @@ export async function rm(path: string, target: string) {
   data.append('path', path)
   data.append('target', target)
 
-  const res = await request(
+  const res = await request<{}>(
     '/api/rm',
     {
       method: 'POST',
@@ -83,7 +116,7 @@ export async function upload(path: string, file: File) {
   data.append('target', file.name)
   data.append('file', file)
 
-  const res = await request(
+  const res = await request<{}>(
     '/api/upload',
     {
       method: 'POST',

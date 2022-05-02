@@ -12,7 +12,7 @@ func MkdirHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	path := r.FormValue("path")
-	dir := r.FormValue("dir")
+	target := r.FormValue("target")
 
 	// 计算出工作路径
 	workingPath, err := common.GetWorkingPath(path)
@@ -21,7 +21,7 @@ func MkdirHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	targetPath := filepath.Join(workingPath, dir)
+	targetPath := filepath.Join(workingPath, target)
 
 	err = os.MkdirAll(targetPath, 0755)
 	if err != nil {
@@ -29,5 +29,5 @@ func MkdirHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	JsonHandler(w, make(map[string]interface{}))
+	JsonHandler(w, map[string]interface{}{})
 }

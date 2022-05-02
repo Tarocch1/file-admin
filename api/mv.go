@@ -12,8 +12,8 @@ func MvHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	path := r.FormValue("path")
-	from := r.FormValue("from")
 	target := r.FormValue("target")
+	to := r.FormValue("to")
 
 	// 计算出工作路径
 	workingPath, err := common.GetWorkingPath(path)
@@ -22,14 +22,14 @@ func MvHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fromPath := filepath.Join(workingPath, from)
 	targetPath := filepath.Join(workingPath, target)
+	toPath := filepath.Join(workingPath, to)
 
-	err = os.Rename(fromPath, targetPath)
+	err = os.Rename(targetPath, toPath)
 	if err != nil {
 		ErrorHandler(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	JsonHandler(w, make(map[string]interface{}))
+	JsonHandler(w, map[string]interface{}{})
 }

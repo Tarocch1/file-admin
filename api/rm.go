@@ -28,5 +28,5 @@ func RmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	JsonHandler(w, make(map[string]interface{}))
+	JsonHandler(w, map[string]interface{}{})
 }
