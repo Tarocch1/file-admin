@@ -15,6 +15,7 @@ WORKDIR /app
 COPY --from=builder /app/file-admin .
 
 RUN set -ex && \
+    chmod 755 /app/file-admin && \
     apk --no-cache add ca-certificates
 
 ENV PATH /app:$PATH
