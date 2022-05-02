@@ -14,7 +14,7 @@ const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
 
     for (let i = 0; i < targets.length; i++) {
       const assetPath = `dist/${targets[i].out}`
-      const assetName = assetPath
+      const assetName = targets[i].out
       const headers = {
         'content-type': assetContentType,
         'content-length': contentLength(assetPath),
