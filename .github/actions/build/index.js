@@ -47,7 +47,7 @@ const targets = require('../targets.json')
       core.info(`Starting build ${target.out}`)
       await exec.exec(
         'go',
-        ['build', '-o', target.out, '-ldflags', ldflags],
+        ['build', '-o', `dist/${target.out}`, '-ldflags', ldflags],
         options
       )
     }
