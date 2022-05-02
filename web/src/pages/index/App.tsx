@@ -46,7 +46,7 @@ export default function App() {
   )
 
   const edit = useCallback(
-    async (target: string, value: string) => {
+    async (target: string, value: Blob) => {
       const res = await editApt(paths.join('/'), target, value)
       if (res) {
         ls()

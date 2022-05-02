@@ -72,16 +72,20 @@ export async function cat(path: string, target: string) {
   return false
 }
 
-export async function edit(path: string, target: string, content: string) {
+export async function edit(path: string, target: string, content: Blob) {
   const data = new FormData()
   data.append('path', path)
   data.append('target', target)
   data.append('content', content)
 
-  const res = await request<{}>('/api/edit', {
-    method: 'POST',
-    body: data,
-  })
+  const res = await request<{}>(
+    '/api/edit',
+    {
+      method: 'POST',
+      body: data,
+    },
+    true
+  )
 
   if (res) {
     return true

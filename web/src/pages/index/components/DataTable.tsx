@@ -24,7 +24,7 @@ export interface IDataTableProp {
   onClickName: (item: LsResultItem) => void
   onMv: (target: string, to: string) => void
   onRm: (target: string) => void
-  onEdit: (target: string, value: string) => void
+  onEdit: (target: string, value: Blob) => void
 }
 
 export default function DataTable({
@@ -40,7 +40,6 @@ export default function DataTable({
   const [showMv, setShowMv] = useState<boolean>(false)
   const [mvTarget, setMvTarget] = useState<string>('')
   const [mvValue, setMvValue] = useState<string>('')
-  const [showEdit, setShowEdit] = useState<boolean>(false)
   const [editTarget, setEditTarget] = useState<string>('')
 
   function mv() {
@@ -54,14 +53,12 @@ export default function DataTable({
     setMvTarget('')
   }
 
-  function edit(value: string) {
+  function edit(value: Blob) {
     onEdit(editTarget, value)
-    setShowEdit(false)
     setEditTarget('')
   }
 
   function closeEdit() {
-    setShowEdit(false)
     setEditTarget('')
   }
 
@@ -145,7 +142,6 @@ export default function DataTable({
                 title="Edit"
                 onClick={() => {
                   setEditTarget(item.name)
-                  setShowEdit(true)
                 }}
               />
             )}
@@ -191,7 +187,6 @@ export default function DataTable({
         onChange={(value) => setMvValue(value)}
       />
       <Edit
-        visible={showEdit}
         paths={paths}
         target={editTarget}
         onOk={edit}

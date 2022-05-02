@@ -1,29 +1,25 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Input } from 'antd'
 
 import { cat as catApi } from '@/api'
 import InputModal from '@/components/InputModal'
+import Monaco from './Monaco'
+import './utils/useMonacoWorker'
 
 export interface IEditProp {
-  visible: boolean
   paths: string[]
   target: string
-  onOk: (value: string) => void
+  onOk: (value: Blob) => void
   onCancel: () => void
 }
 
-export default function Edit({
-  visible,
-  paths,
-  target,
-  onOk,
-  onCancel,
-}: IEditProp) {
+export default function Edit({ paths, target, onOk, onCancel }: IEditProp) {
+  const [show, setShow] = useState<boolean>(false)
   const [value, setValue] = useState<string>('')
 
   const cat = useCallback(async () => {
     if (!target) {
       setValue('')
+      setShow(false)
       return
     }
     const res = await catApi(paths.join('/'), target)
@@ -32,6 +28,7 @@ export default function Edit({
     } else {
       setValue('')
     }
+    setShow(true)
   }, [paths, target])
 
   useEffect(() => {
@@ -40,20 +37,19 @@ export default function Edit({
 
   return (
     <InputModal
-      visible={visible}
+      visible={show}
       title="Edit"
       width="80%"
       value={value}
       centered
       component={({ value, onChange }) => (
-        <Input.TextArea
-          rows={25}
+        <Monaco
           value={value}
-          autoFocus
-          onChange={(e) => onChange(e.target.value)}
+          target={target}
+          onChange={(value) => onChange(value)}
         />
       )}
-      onOk={() => onOk(value)}
+      onOk={() => onOk(new Blob([value]))}
       onCancel={onCancel}
       onChange={(value) => setValue(value)}
     />

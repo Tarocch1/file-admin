@@ -1,6 +1,7 @@
 package api
 
 import (
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,7 +14,16 @@ func EditHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := r.FormValue("path")
 	target := r.FormValue("target")
-	content := r.FormValue("content")
+	content, _, err := r.FormFile("content")
+	if err != nil {
+		ErrorHandler(w, http.StatusInternalServerError, err)
+		return
+	}
+	contentBytes, err := ioutil.ReadAll(content)
+	if err != nil {
+		ErrorHandler(w, http.StatusInternalServerError, err)
+		return
+	}
 
 	workingPath, err := common.GetWorkingPath(path)
 	if err != nil {
@@ -23,7 +33,7 @@ func EditHandler(w http.ResponseWriter, r *http.Request) {
 
 	targetPath := filepath.Join(workingPath, target)
 
-	err = os.WriteFile(targetPath, []byte(content), 0644)
+	err = os.WriteFile(targetPath, contentBytes, 0644)
 	if err != nil {
 		ErrorHandler(w, http.StatusInternalServerError, err)
 		return
