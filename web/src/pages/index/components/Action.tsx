@@ -1,28 +1,38 @@
 import { Fragment, useState, useRef } from 'react'
 import { Space, Button } from 'antd'
-import { FolderAddOutlined, CloudUploadOutlined } from '@ant-design/icons'
+import {
+  FolderAddOutlined,
+  FileAddOutlined,
+  CloudUploadOutlined,
+} from '@ant-design/icons'
 
 import InputModal from '@/components/InputModal'
 
 export interface IActionProp {
-  onMkdir: (dir: string) => void
+  onMkdir: (target: string) => void
+  onTouch: (target: string) => void
   onUpload: (file: File) => void
 }
 
-export default function Action({ onMkdir, onUpload }: IActionProp) {
-  const [showMkdir, setShowMkdir] = useState<boolean>(false)
-  const [mkdirValue, setMkdirValue] = useState<string>('')
+export default function Action({ onMkdir, onTouch, onUpload }: IActionProp) {
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const [modalValue, setModalValue] = useState<string>('')
+  const [modalMode, setModalMode] = useState<'mkdir' | 'touch'>('mkdir')
 
   const uploadRef = useRef<HTMLInputElement>(null)
 
-  async function mkdir() {
-    onMkdir(mkdirValue)
-    closeMkdir()
+  function modalOk() {
+    if (modalMode === 'mkdir') {
+      onMkdir(modalValue)
+    } else {
+      onTouch(modalValue)
+    }
+    closeModal()
   }
 
-  function closeMkdir() {
-    setShowMkdir(false)
-    setMkdirValue('')
+  function closeModal() {
+    setShowModal(false)
+    setModalValue('')
   }
 
   return (
@@ -31,9 +41,22 @@ export default function Action({ onMkdir, onUpload }: IActionProp) {
         <Button
           type="primary"
           icon={<FolderAddOutlined />}
-          onClick={() => setShowMkdir(true)}
+          onClick={() => {
+            setModalMode('mkdir')
+            setShowModal(true)
+          }}
         >
           New Folder
+        </Button>
+        <Button
+          type="primary"
+          icon={<FileAddOutlined />}
+          onClick={() => {
+            setModalMode('touch')
+            setShowModal(true)
+          }}
+        >
+          New File
         </Button>
         <Button
           type="primary"
@@ -46,13 +69,13 @@ export default function Action({ onMkdir, onUpload }: IActionProp) {
         </Button>
       </Space>
       <InputModal
-        visible={showMkdir}
-        title="New Folder"
-        placeholder="Folder Path"
-        value={mkdirValue}
-        onOk={mkdir}
-        onCancel={closeMkdir}
-        onChange={(value) => setMkdirValue(value)}
+        visible={showModal}
+        title={modalMode === 'mkdir' ? 'New Folder' : 'New File'}
+        placeholder={modalMode === 'mkdir' ? 'Folder Name' : 'File Name'}
+        value={modalValue}
+        onOk={modalOk}
+        onCancel={closeModal}
+        onChange={(value) => setModalValue(value)}
       />
       <input
         ref={uploadRef}

@@ -19,6 +19,7 @@ func StartServer() {
 	mux.HandleFunc("/", middleware.Middleware(http.FileServer(http.FS(fsRoot)).ServeHTTP))
 
 	mux.HandleFunc("/api/ls", middleware.Middleware(api.LsHandler))
+	mux.HandleFunc("/api/touch", middleware.Middleware(api.TouchHandler))
 	mux.HandleFunc("/api/mkdir", middleware.Middleware(api.MkdirHandler))
 	mux.HandleFunc("/api/cat", middleware.Middleware(api.CatHandler))
 	mux.HandleFunc("/api/edit", middleware.Middleware(api.EditHandler))

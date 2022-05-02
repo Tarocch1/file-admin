@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   ls as lsApi,
   mkdir as mkdirApi,
+  touch as touchApi,
   edit as editApt,
   mv as mvApi,
   rm as rmApi,
@@ -23,6 +24,16 @@ export default function App() {
     setData(res)
     setLoading(false)
   }, [paths])
+
+  const touch = useCallback(
+    async (target: string) => {
+      const res = await touchApi(paths.join('/'), target)
+      if (res) {
+        ls()
+      }
+    },
+    [paths, ls]
+  )
 
   const mkdir = useCallback(
     async (target: string) => {
@@ -95,7 +106,7 @@ export default function App() {
 
   return (
     <div>
-      <Action onMkdir={mkdir} onUpload={upload} />
+      <Action onMkdir={mkdir} onTouch={touch} onUpload={upload} />
       <DataTable
         loading={loading}
         paths={paths}

@@ -16,6 +16,26 @@ export async function ls(path: string) {
   return []
 }
 
+export async function touch(path: string, target: string) {
+  const data = new FormData()
+  data.append('path', path)
+  data.append('target', target)
+
+  const res = await request<{}>(
+    '/api/touch',
+    {
+      method: 'POST',
+      body: data,
+    },
+    true
+  )
+
+  if (res) {
+    return true
+  }
+  return false
+}
+
 export async function mkdir(path: string, target: string) {
   const data = new FormData()
   data.append('path', path)
