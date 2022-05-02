@@ -26,7 +26,7 @@ export default function Edit({
       setValue('')
       return
     }
-    const res = await catApi(paths.join(','), target)
+    const res = await catApi(paths.join('/'), target)
     if (res) {
       setValue(res.content)
     } else {
