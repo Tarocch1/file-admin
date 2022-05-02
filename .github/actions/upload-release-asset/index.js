@@ -13,7 +13,7 @@ const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
     const contentLength = (filePath) => fs.statSync(filePath).size
 
     for (let i = 0; i < targets.length; i++) {
-      const assetPath = targets[i].out
+      const assetPath = `dist/${targets[i].out}`
       const assetName = assetPath
       const headers = {
         'content-type': assetContentType,
