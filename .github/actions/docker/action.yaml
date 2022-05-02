@@ -2,7 +2,7 @@ name: docker
 description: Docker Build
 
 runs:
-  using: "composite"
-  steps
+  using: 'composite'
+  steps:
     - run: build.sh
       shell: bash
