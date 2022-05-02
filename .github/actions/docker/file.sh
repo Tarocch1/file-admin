@@ -12,4 +12,4 @@ case ${TARGETPLATFORM} in
   *) FILENAME="file-admin_linux_64";;
 esac
 
-cp ${FILENAME} file_admin
+cp ${FILENAME} file-admin
