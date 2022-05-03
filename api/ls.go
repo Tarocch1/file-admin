@@ -11,6 +11,7 @@ type LsResultItem struct {
 	Name  string `json:"name"`
 	IsDir bool   `json:"isDir"`
 	Time  int64  `json:"time"`
+	Mode  string `json:"mode"`
 	Size  int64  `json:"size"`
 }
 
@@ -37,6 +38,7 @@ func LsHandler(w http.ResponseWriter, r *http.Request) {
 				Name:  itemInfo.Name(),
 				IsDir: itemInfo.IsDir(),
 				Time:  itemInfo.ModTime().Unix(),
+				Mode:  itemInfo.Mode().String(),
 				Size:  itemInfo.Size(),
 			})
 		} else {
@@ -44,6 +46,7 @@ func LsHandler(w http.ResponseWriter, r *http.Request) {
 				Name:  itemInfo.Name(),
 				IsDir: itemInfo.IsDir(),
 				Time:  itemInfo.ModTime().Unix(),
+				Mode:  itemInfo.Mode().String(),
 				Size:  itemInfo.Size(),
 			})
 		}

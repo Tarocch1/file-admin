@@ -114,6 +114,12 @@ export default function DataTable({
     },
     {
       key: 'name',
+      title: 'Mode',
+      dataIndex: 'mode',
+      width: 150,
+    },
+    {
+      key: 'name',
       title: 'Size',
       dataIndex: 'size',
       render: formatSize,
