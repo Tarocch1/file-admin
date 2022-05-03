@@ -1,6 +1,7 @@
 import { Fragment, useState, useCallback } from 'react'
 import { Breadcrumb, Table, Space, Button, Popconfirm } from 'antd'
 import { ColumnsType } from 'antd/es/table'
+import { SortOrder, SorterResult } from 'antd/es/table/interface'
 import {
   HomeOutlined,
   FolderOpenTwoTone,
@@ -27,6 +28,28 @@ export interface IDataTableProp {
   onEdit: (target: string, value: Blob) => void
 }
 
+function sort(
+  key: keyof LsResultItem,
+  type: 'string' | 'number',
+  order: SortOrder
+) {
+  return function (a: LsResultItem, b: LsResultItem) {
+    if (a.isDir && !b.isDir) {
+      return order === 'ascend' ? -1 : 1
+    }
+    if (!a.isDir && b.isDir) {
+      return order === 'ascend' ? 1 : -1
+    }
+    if (type === 'string') {
+      return (a[key] as string).charCodeAt(0) - (b[key] as string).charCodeAt(0)
+    }
+    if (type === 'number') {
+      return (a[key] as number) - (b[key] as number)
+    }
+    return 0
+  }
+}
+
 export default function DataTable({
   loading,
   paths,
@@ -37,6 +60,8 @@ export default function DataTable({
   onRm,
   onEdit,
 }: IDataTableProp) {
+  const [sortedInfo, setSortedInfo] = useState<SorterResult<LsResultItem>>({})
+
   const [showMv, setShowMv] = useState<boolean>(false)
   const [mvTarget, setMvTarget] = useState<string>('')
   const [mvValue, setMvValue] = useState<string>('')
@@ -83,9 +108,10 @@ export default function DataTable({
 
   const columns: ColumnsType<LsResultItem> = [
     {
-      key: 'name',
+      key: 'icon',
       title: '',
       dataIndex: 'isDir',
+      width: 10,
       render: (isDir: boolean) => {
         return isDir ? (
           <FolderOpenTwoTone twoToneColor="#d48806" />
@@ -93,40 +119,63 @@ export default function DataTable({
           <FileOutlined />
         )
       },
-      width: 10,
     },
     {
       key: 'name',
       title: 'Name',
       dataIndex: 'name',
+      showSorterTooltip: false,
+      sorter: sort(
+        'name',
+        'string',
+        sortedInfo.columnKey === 'name' ? sortedInfo.order || null : null
+      ),
+      sortOrder:
+        sortedInfo.columnKey === 'name' ? sortedInfo.order || null : null,
       render: (name: string, item) => {
         return <a onClick={() => onClickName(item)}>{name}</a>
       },
     },
     {
-      key: 'name',
+      key: 'time',
       title: 'Time',
       dataIndex: 'time',
+      showSorterTooltip: false,
+      sorter: sort(
+        'time',
+        'number',
+        sortedInfo.columnKey === 'time' ? sortedInfo.order || null : null
+      ),
+      sortOrder:
+        sortedInfo.columnKey === 'time' ? sortedInfo.order || null : null,
+      width: 200,
       render: (time: number) => {
         return dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')
       },
-      width: 200,
     },
     {
-      key: 'name',
+      key: 'mode',
       title: 'Mode',
       dataIndex: 'mode',
       width: 150,
     },
     {
-      key: 'name',
+      key: 'size',
       title: 'Size',
       dataIndex: 'size',
-      render: formatSize,
+      showSorterTooltip: false,
+      sorter: sort(
+        'size',
+        'number',
+        sortedInfo.columnKey === 'size' ? sortedInfo.order || null : null
+      ),
+      sortOrder:
+        sortedInfo.columnKey === 'size' ? sortedInfo.order || null : null,
       width: 150,
+      render: formatSize,
     },
     {
-      key: 'name',
+      key: 'opt',
       title: 'Operation',
       render: (item: LsResultItem) => {
         return (
@@ -182,6 +231,11 @@ export default function DataTable({
         loading={loading}
         dataSource={data}
         columns={columns}
+        onChange={(
+          _,
+          __,
+          sorter: SorterResult<LsResultItem> | SorterResult<LsResultItem>[]
+        ) => setSortedInfo(Array.isArray(sorter) ? sorter[0] : sorter)}
       />
       <InputModal
         visible={showMv}
