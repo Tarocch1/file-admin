@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"path/filepath"
 
 	"github.com/Tarocch1/file-admin/common"
 )
@@ -17,7 +18,7 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Disposition", "attachment; filename=\""+target+"\"")
+	w.Header().Set("Content-Disposition", "attachment; filename=\""+filepath.Base(target)+"\"")
 
 	http.ServeFile(w, r, targetPath)
 }
