@@ -12,11 +12,12 @@ FROM alpine:latest
 
 WORKDIR /app
 
-COPY --from=builder /app/file-admin .
+COPY --platform=$TARGETPLATFORM --from=builder /app/file-admin .
 
 RUN set -ex && \
-    chmod 755 /app/file-admin && \
-    apk --no-cache add ca-certificates
+    apk --no-cache add ca-certificates && \
+    chmod +x /app/file-admin && \
+    /app/file-admin -v
 
 ENV PATH /app:$PATH
 
