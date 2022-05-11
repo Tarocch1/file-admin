@@ -8,11 +8,11 @@ ARG TARGETPLATFORM
 
 RUN ash ./file.sh
 
-FROM alpine:latest
+FROM --platform=$TARGETPLATFORM alpine:latest
 
 WORKDIR /app
 
-COPY --platform=$TARGETPLATFORM --from=builder /app/file-admin .
+COPY --from=builder /app/file-admin .
 
 RUN set -ex && \
     apk --no-cache add ca-certificates && \
