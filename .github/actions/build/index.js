@@ -25,7 +25,7 @@ const targets = require('../targets.json')
     GO_VERSION = GO_VERSION.replace('go version ', '')
     GO_VERSION = GO_VERSION.replace(/\n/g, '')
     BUILD_TIME = BUILD_TIME.replace(/\n/g, '')
-    const ldflags = `-w -s -X 'main.Version=${VERSION}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.CommitID=${process.env['COMMIT_ID']}'`
+    const ldflags = `-w -s -extldflags '-static' -X 'main.Version=${VERSION}' -X 'main.GoVersion=${GO_VERSION}' -X 'main.BuildTime=${BUILD_TIME}' -X 'main.CommitID=${process.env['COMMIT_ID']}'`
     for (let i = 0; i < targets.length; i++) {
       const target = targets[i]
       const env = {
