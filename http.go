@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/fs"
 	"net/http"
 
 	"github.com/Tarocch1/file-admin/api"
@@ -14,8 +13,6 @@ import (
 	"github.com/Tarocch1/kid/middlewares/requestlogger"
 )
 
-var requestLogger = common.NewLogger("HTTP Request")
-
 func startServer() error {
 	k := kid.New(kid.Config{
 		ErrorHandler: errorHandler,
@@ -23,17 +20,7 @@ func startServer() error {
 
 	k.Use(recovery.New())
 	k.Use(requestid.New())
-	k.Use(requestlogger.New(requestlogger.Config{
-		UseFmt: true,
-		Formatter: func(c *kid.Ctx) string {
-			message := fmt.Sprintf("%s %s", c.Method(), c.Url().RequestURI())
-			extra := map[string]interface{}{
-				"body":   string(c.Body()),
-				"header": c.Header(),
-			}
-			return requestLogger.FormatMessage(c, message, common.LoggerLevelInfo, extra, nil)
-		},
-	}))
+	k.Use(requestlogger.New())
 
 	if common.AuthUser != "" && common.AuthPass != "" {
 		k.Use(basicauth.New(basicauth.Config{
@@ -54,13 +41,17 @@ func startServer() error {
 	apiGroup.Get("/download", api.DownloadHandler)
 	apiGroup.Post("/upload", api.UploadHandler)
 
-	fsRoot, _ := fs.Sub(static, "static")
-
 	k.Get("/", func(c *kid.Ctx) error {
-		return c.SendFile("index.html", false, http.FS(fsRoot))
+		return c.SendFile("index.html", false, &kid.FileSystem{
+			Root: "/static",
+			FS:   http.FS(static),
+		})
 	})
 	k.Get("/*path", func(c *kid.Ctx) error {
-		return c.SendFile(c.GetParam("path"), false, http.FS(fsRoot))
+		return c.SendFile(c.GetParam("path"), false, &kid.FileSystem{
+			Root: "/static",
+			FS:   http.FS(static),
+		})
 	})
 
 	addr := fmt.Sprintf("%s:%s", common.FlagHost, common.FlagPort)

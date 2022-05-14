@@ -5,11 +5,10 @@ import (
 	"time"
 
 	"github.com/Tarocch1/kid"
-	"github.com/Tarocch1/kid/middlewares/requestid"
 )
 
-var responseLogger = NewLogger("HTTP Response")
-var errorLogger = NewLogger("HTTP Error")
+var responseLogger = kid.NewLogger("HTTP Response")
+var errorLogger = kid.NewLogger("HTTP Error")
 
 func JsonMap(c *kid.Ctx, data interface{}) map[string]interface{} {
 	message := fmt.Sprintf("%s %s", c.Method(), c.Url().RequestURI())
@@ -22,7 +21,7 @@ func JsonMap(c *kid.Ctx, data interface{}) map[string]interface{} {
 		"code":      0,
 		"message":   "success",
 		"data":      data,
-		"requestId": c.Get(requestid.HeaderRequestId),
+		"requestId": c.Get(kid.CtxRequestId),
 		"timestamp": time.Now().Unix(),
 	}
 }
@@ -37,7 +36,7 @@ func ErrorMap(c *kid.Ctx, status int, err error) map[string]interface{} {
 	return map[string]interface{}{
 		"code":      status,
 		"message":   err.Error(),
-		"requestId": c.Get(requestid.HeaderRequestId),
+		"requestId": c.Get(kid.CtxRequestId),
 		"timestamp": time.Now().Unix(),
 	}
 }

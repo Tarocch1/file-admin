@@ -2,6 +2,7 @@ package common
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -39,7 +40,7 @@ func GetRootDir() {
 	if isDir {
 		RootDir = dir
 	} else {
-		panic(errors.New(dir + " is not a dir"))
+		panic(fmt.Errorf("%s is not a dir", dir))
 	}
 }
 
