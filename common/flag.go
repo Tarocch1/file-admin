@@ -1,8 +1,8 @@
 package common
 
 import (
-	"encoding/base64"
 	"flag"
+	"strings"
 )
 
 var FlagHost string
@@ -19,7 +19,7 @@ var FlagHTTPSKey string
 
 var FlagVersion bool
 
-func InitFlag() {
+func init() {
 	flag.StringVar(&FlagHost, "h", "0.0.0.0", "Host to listen.")
 	flag.StringVar(&FlagPort, "p", "3000", "Port to listen.")
 	flag.StringVar(&FlagDir, "d", ".", "Dir path to serve.")
@@ -33,6 +33,10 @@ func ParseFlag() {
 	flag.Parse()
 
 	if FlagAuth != "" {
-		FlagAuth = base64.StdEncoding.EncodeToString([]byte(FlagAuth))
+		index := strings.Index(FlagAuth, ":")
+		if index != -1 {
+			AuthUser = FlagAuth[:index]
+			AuthPass = FlagAuth[index+1:]
+		}
 	}
 }

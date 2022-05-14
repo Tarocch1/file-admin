@@ -7,6 +7,23 @@ import (
 	"strings"
 )
 
+func If[T interface{}](isTrue bool, a T, b T) T {
+	if isTrue {
+		return a
+	}
+	return b
+}
+
+func SliceFilter[T interface{}](s []T, filter func(item T) bool) []T {
+	var newS []T
+	for _, x := range s {
+		if filter(x) {
+			newS = append(newS, x)
+		}
+	}
+	return newS
+}
+
 func GetRootDir() {
 	var dir string
 	var err error

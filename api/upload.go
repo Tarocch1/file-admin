@@ -2,41 +2,44 @@ package api
 
 import (
 	"io/ioutil"
-	"net/http"
 	"path/filepath"
 
 	"github.com/Tarocch1/file-admin/common"
+	"github.com/Tarocch1/kid"
 )
 
-func UploadHandler(w http.ResponseWriter, r *http.Request) {
+func UploadHandler(c *kid.Ctx) error {
 	var err error
 
-	path := r.FormValue("path")
-	target := r.FormValue("target")
-	file, _, err := r.FormFile("file")
+	path := c.FormValue("path")
+	target := c.FormValue("target")
+	fileHeader, err := c.FormFile("file")
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
+
+	file, err := fileHeader.Open()
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	workingPath, err := common.GetWorkingPath(path)
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	targetPath := filepath.Join(workingPath, target)
 
 	err = ioutil.WriteFile(targetPath, fileBytes, 0755)
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
-	JsonHandler(w, map[string]interface{}{})
+	return c.Json(common.JsonMap(c, nil))
 }

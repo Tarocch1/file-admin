@@ -2,9 +2,9 @@ package api
 
 import (
 	"io/ioutil"
-	"net/http"
 
 	"github.com/Tarocch1/file-admin/common"
+	"github.com/Tarocch1/kid"
 )
 
 type LsResultItem struct {
@@ -15,21 +15,19 @@ type LsResultItem struct {
 	Size  int64  `json:"size"`
 }
 
-func LsHandler(w http.ResponseWriter, r *http.Request) {
+func LsHandler(c *kid.Ctx) error {
 	var err error
 
-	path := r.FormValue("path")
+	path := c.FormValue("path")
 
 	workingPath, err := common.GetWorkingPath(path)
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	allItems, err := ioutil.ReadDir(workingPath)
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
 	var result, dirs, files []LsResultItem
 	for _, itemInfo := range allItems {
@@ -54,5 +52,5 @@ func LsHandler(w http.ResponseWriter, r *http.Request) {
 	result = append(result, dirs...)
 	result = append(result, files...)
 
-	JsonHandler(w, result)
+	return c.Json(common.JsonMap(c, result))
 }

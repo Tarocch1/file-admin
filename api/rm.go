@@ -1,32 +1,30 @@
 package api
 
 import (
-	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/Tarocch1/file-admin/common"
+	"github.com/Tarocch1/kid"
 )
 
-func RmHandler(w http.ResponseWriter, r *http.Request) {
+func RmHandler(c *kid.Ctx) error {
 	var err error
 
-	path := r.FormValue("path")
-	target := r.FormValue("target")
+	path := c.FormValue("path")
+	target := c.FormValue("target")
 
 	workingPath, err := common.GetWorkingPath(path)
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	targetPath := filepath.Join(workingPath, target)
 
 	err = os.RemoveAll(targetPath)
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
-	JsonHandler(w, map[string]interface{}{})
+	return c.Json(common.JsonMap(c, nil))
 }

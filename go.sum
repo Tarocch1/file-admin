@@ -1,0 +1,4 @@
+github.com/Tarocch1/kid v0.5.0 h1:yJZEWrSdCI9+kWJMl+G4BIsGBzfkVHr2HSJOiNb75M0=
+github.com/Tarocch1/kid v0.5.0/go.mod h1:82oSzgPeA6pydgTSC4EVsSG9jQQumbtyxBGuD+vZXsM=
+github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=

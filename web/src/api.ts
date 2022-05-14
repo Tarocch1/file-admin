@@ -11,7 +11,7 @@ export async function ls(path: string) {
   })
 
   if (res) {
-    return res
+    return res.data
   }
   return []
 }
@@ -21,7 +21,7 @@ export async function touch(path: string, target: string) {
   data.append('path', path)
   data.append('target', target)
 
-  const res = await request<{}>(
+  const res = await request<null>(
     '/api/touch',
     {
       method: 'POST',
@@ -41,7 +41,7 @@ export async function mkdir(path: string, target: string) {
   data.append('path', path)
   data.append('target', target)
 
-  const res = await request<{}>(
+  const res = await request<null>(
     '/api/mkdir',
     {
       method: 'POST',
@@ -67,7 +67,7 @@ export async function cat(path: string, target: string) {
   })
 
   if (res) {
-    return res
+    return res.data
   }
   return false
 }
@@ -78,7 +78,7 @@ export async function edit(path: string, target: string, content: Blob) {
   data.append('target', target)
   data.append('content', content)
 
-  const res = await request<{}>(
+  const res = await request<null>(
     '/api/edit',
     {
       method: 'POST',
@@ -99,7 +99,7 @@ export async function mv(path: string, target: string, to: string) {
   data.append('target', target)
   data.append('to', to)
 
-  const res = await request<{}>(
+  const res = await request<null>(
     '/api/mv',
     {
       method: 'POST',
@@ -119,7 +119,7 @@ export async function rm(path: string, target: string) {
   data.append('path', path)
   data.append('target', target)
 
-  const res = await request<{}>(
+  const res = await request<null>(
     '/api/rm',
     {
       method: 'POST',
@@ -140,7 +140,7 @@ export async function upload(path: string, file: File) {
   data.append('target', file.name)
   data.append('file', file)
 
-  const res = await request<{}>(
+  const res = await request<null>(
     '/api/upload',
     {
       method: 'POST',

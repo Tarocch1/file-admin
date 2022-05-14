@@ -1,24 +1,29 @@
 package api
 
 import (
+	"io/fs"
 	"net/http"
-	"path/filepath"
+	"os"
 
 	"github.com/Tarocch1/file-admin/common"
+	"github.com/Tarocch1/kid"
 )
 
-func DownloadHandler(w http.ResponseWriter, r *http.Request) {
+func DownloadHandler(c *kid.Ctx) error {
 	var err error
 
-	target := r.FormValue("target")
+	target := c.FormValue("target")
 
 	targetPath, err := common.GetWorkingPath(target)
 	if err != nil {
-		ErrorHandler(w, http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
-	w.Header().Set("Content-Disposition", "attachment; filename=\""+filepath.Base(target)+"\"")
+	return c.SendFile(targetPath, true, http.FS(&myfs{}))
+}
 
-	http.ServeFile(w, r, targetPath)
+type myfs struct{}
+
+func (f *myfs) Open(path string) (fs.File, error) {
+	return os.Open("/" + path)
 }

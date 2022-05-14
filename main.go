@@ -17,10 +17,6 @@ var (
 //go:embed static
 var static embed.FS
 
-func init() {
-	common.InitFlag()
-}
-
 func main() {
 	common.ParseFlag()
 
@@ -34,5 +30,5 @@ func main() {
 
 	common.GetRootDir()
 
-	StartServer()
+	startServer()
 }

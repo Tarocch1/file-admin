@@ -11,7 +11,13 @@ export async function request<T>(
     const res = await fetch(url, init)
     if (res.ok) {
       showSuccess && message.success('success')
-      return (await res.json()) as T
+      return (await res.json()) as {
+        code: number
+        message: string
+        data: T
+        requestId: string
+        timestamp: string
+      }
     } else {
       console.log(res)
       message.error(url)
