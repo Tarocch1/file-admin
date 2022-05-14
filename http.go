@@ -65,6 +65,9 @@ func startServer() error {
 
 	addr := fmt.Sprintf("%s:%s", common.FlagHost, common.FlagPort)
 
+	if common.FlagHTTPSCert != "" && common.FlagHTTPSKey != "" {
+		return k.ListenTLS(addr, common.FlagHTTPSCert, common.FlagHTTPSKey)
+	}
 	return k.Listen(addr)
 }
 

@@ -30,5 +30,8 @@ func main() {
 
 	common.GetRootDir()
 
-	startServer()
+	err := startServer()
+	if err != nil {
+		panic(err)
+	}
 }
