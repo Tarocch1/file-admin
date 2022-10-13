@@ -88,7 +88,7 @@ jobs:
           password: ${{ secrets.ALIYUN_DOCKER_PASSWORD }}
       - name: Setup QEMU
         id: qemu
-        uses: docker/setup-qemu-action@v2.0.0
+        uses: docker/setup-qemu-action@v2.1.0
         with:
           platforms: all
       - name: Setup Docker Buildx
