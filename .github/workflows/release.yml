@@ -42,7 +42,7 @@ jobs:
           ref: ${{ github.ref }}
       - id: upload-artifact
         name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
